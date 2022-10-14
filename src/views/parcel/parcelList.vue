@@ -81,8 +81,8 @@
       <col style="width: 5%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
-      <col style="width: 20%" />
-      <col style="width: 30%" />
+      <col style="width: 10%" />
+      <col style="width: 10%" />
       <col style="width: *" />
       <col style="width: *" />
       <col style="width: *" />
@@ -112,7 +112,8 @@
         <td>{{ row.hoCode }}</td>
         <td>{{ row.parcelFlag }}</td>
         <td>{{ row.parcelCorp }}</td>
-        <td>{{ row.parcelStatus }}</td>
+        <td>{{ row.receiveTime }}</td>
+        <!-- <td>{{ row.parcelStatus }}</td> -->
         <td>{{ row.posUpdateDate }}</td>
         <td>{{ row.sendResult }}</td>
       </tr>
