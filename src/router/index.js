@@ -111,10 +111,23 @@ const routes = [
   },
   {
     path: "/parcel/parcelList",
-    name: "parkingLocationDetail",
+    name: "parcelList",
     component: () => import("../views/parcel/parcelList.vue"),
     meta: { requireLogin: true },
   },
+  {
+    path: "/parcel/parcelListDetail",
+    name: "parcelListDetail",
+    component: () => import("../views/parcel/parcelListDetail.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/parcel/parcelUpdate",
+    name: "parcelUpdate",
+    component: () => import("../views/parcel/parcelUpdate.vue"),
+    meta: { requireLogin: true },
+  },
+
   /************************************************************************************************************** */
 ];
 

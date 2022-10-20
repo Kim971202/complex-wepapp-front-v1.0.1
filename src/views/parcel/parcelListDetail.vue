@@ -8,48 +8,36 @@
       </colgroup>
       <tbody>
         <tr>
+          <th scope="row">도착일시</th>
+          <td><span v-html="arrivalTime"></span></td>
+        </tr>
+        <tr>
+          <th scope="row">수령여부</th>
+          <td>{{ parcel_status }}</td>
+        </tr>
+        <tr>
           <th scope="row">동</th>
-          <td>{{ dongCode }}</td>
+          <td><span v-html="dongCode"></span></td>
         </tr>
         <tr>
           <th scope="row">호</th>
-          <td>{{ hoCode }}</td>
+          <td><span v-html="hoCode"></span></td>
         </tr>
         <tr>
-          <th scope="row">Tag ID</th>
-          <td>{{ tagName }}</td>
-        </tr>
-        <tr>
-          <th scope="row">기둥명칭</th>
-          <td><span v-html="posDesc"></span></td>
-        </tr>
-        <tr>
-          <th scope="row">좌표</th>
-          <td><span v-html="position"></span></td>
-        </tr>
-        <tr>
-          <th scope="row">층</th>
-          <td><span v-html="floorName"></span></td>
-        </tr>
-        <tr>
-          <th scope="row">건물명</th>
-          <td><span v-html="buildingName"></span></td>
-        </tr>
-        <tr>
-          <th scope="row">등록일시</th>
-          <td>{{ posUpdateDate }}</td>
+          <th scope="row">메모(택배사)</th>
+          <td>{{ memo }}</td>
         </tr>
       </tbody>
     </table>
 
     <div class="common-buttons">
-      <!-- <button
+      <button
         type="button"
         class="w3-button w3-round w3-blue-gray"
         v-on:click="fnUpdate"
       >
         수정</button
-      >&nbsp; -->
+      >&nbsp;
       <!-- <button
         type="button"
         class="w3-button w3-round w3-red"
@@ -76,22 +64,10 @@ export default {
       requestBody: this.$route.query,
       idx: this.$route.query.idx,
       arrivalTime: "",
+      parcel_status: "",
       dongCode: "",
       hoCode: "",
-      tagName: "",
-      posDesc: "",
-      position: "",
-      floorName: "",
-      buildingName: "",
-      posUpdateDate: "",
-
-      dongCode: this.$route.query.dongCode,
-      hoCode: this.$route.query.hoCode,
-      parcelFlag: this.$route.query.parcelFlag,
-      parcelCorp: this.$route.query.parcelCorp,
-      parcelStatus: this.$route.query.parcelStatus,
-      posUpdateDate: this.$route.query.posUpdateDate,
-      sendResult: this.$route.query.sendResult,
+      memo: "",
     };
   },
   mounted() {
@@ -105,14 +81,11 @@ export default {
         })
 
         .then((res) => {
+          this.arrivalTime = res.data.arrivalTime;
+          this.parcel_status = res.data.parcel_status;
           this.dongCode = res.data.dongCode;
           this.hoCode = res.data.hoCode;
-          this.tagName = res.data.tagName;
-          this.posDesc = res.data.posDesc;
-          this.position = res.data.position;
-          this.floorName = res.data.floorName;
-          this.buildingName = res.data.buildingName;
-          this.posUpdateDate = res.data.posUpdateDate.split("\n").join("<br>"); //개행처리
+          this.memo = res.data.memo.split("\n").join("<br>"); //개행처리
           // this.contents = res.data.contents.split("\n").join("<br>"); //개행처리
           // this.created_at = res.data.created_at;
         })
@@ -123,9 +96,7 @@ export default {
         });
       console.log(
         this.axios.get(
-          this.$serverUrl +
-            "/parking/getDetailedParkingLocationList/" +
-            this.idx,
+          this.$serverUrl + "/parcel/getDetailedParcelList/" + this.idx,
           {
             params: this.requestBody,
           }
