@@ -9,11 +9,12 @@
       <tbody>
         <tr>
           <th scope="row">도착일시</th>
-          <td><span v-html="arrivalTime"></span></td>
+          <td>{{ arrivalTime }}</td>
         </tr>
         <tr>
           <th scope="row">수령여부</th>
-          <td>{{ parcel_status }}</td>
+          <!-- <span v-html="parcelStatus"></span> -->
+          <td>{{ parcelStatus }}</td>
         </tr>
         <tr>
           <th scope="row">동</th>
@@ -24,7 +25,7 @@
           <td><span v-html="hoCode"></span></td>
         </tr>
         <tr>
-          <th scope="row">메모(택배사)</th>
+          <th scope="row">메모(택배회사)</th>
           <td>{{ memo }}</td>
         </tr>
       </tbody>
@@ -38,13 +39,13 @@
       >
         수정</button
       >&nbsp;
-      <!-- <button
+      <button
         type="button"
         class="w3-button w3-round w3-red"
         v-on:click="fnDelete"
       >
         삭제</button
-      >&nbsp; -->
+      >&nbsp;
       <button
         type="button"
         class="w3-button w3-round w3-blue-gray"
@@ -64,7 +65,7 @@ export default {
       requestBody: this.$route.query,
       idx: this.$route.query.idx,
       arrivalTime: "",
-      parcel_status: "",
+      parcelStatus: "",
       dongCode: "",
       hoCode: "",
       memo: "",
@@ -82,7 +83,7 @@ export default {
 
         .then((res) => {
           this.arrivalTime = res.data.arrivalTime;
-          this.parcel_status = res.data.parcel_status;
+          this.parcelStatus = res.data.parcelStatus;
           this.dongCode = res.data.dongCode;
           this.hoCode = res.data.hoCode;
           this.memo = res.data.memo.split("\n").join("<br>"); //개행처리
@@ -94,49 +95,41 @@ export default {
             alert("네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.");
           }
         });
-      console.log(
-        this.axios.get(
-          this.$serverUrl + "/parcel/getDetailedParcelList/" + this.idx,
-          {
-            params: this.requestBody,
-          }
-        )
-      );
     },
 
     fnList() {
       delete this.requestBody.idx;
       this.$router.push({
-        path: "./parcel",
+        path: "./parcelList",
         query: this.requestBody,
       });
     },
-    // fnUpdate() {
-    //   this.$router.push({
-    //     path: "./update",
-    //     query: this.requestBody,
-    //   });
-    // },
-    // fnDelete() {
-    //   var result = confirm("삭제하시겠습니까?");
-    //   if (result) {
-    //     this.axios
-    //       .delete(this.$serverUrl + "/vueboard/delete/" + this.idx, {})
-    //       .then((res) => {
-    //         console.log("res.data.resultCode: " + res.data.resultCode);
-    //         if (res.data.resultCode == "00") {
-    //           alert("삭제되었습니다.");
-    //           //alert(JSON.stringify(res.data.resultMsg));
-    //           this.fnList();
-    //         } else {
-    //           alert("삭제되지 않았습니다.");
-    //         }
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   }
-    // },
+    fnUpdate() {
+      this.$router.push({
+        path: "./parcelListUpdate",
+        query: this.requestBody,
+      });
+    },
+    fnDelete() {
+      var result = confirm("삭제하시겠습니까?");
+      if (result) {
+        this.axios
+          .delete(this.$serverUrl + "/parcel/deleteParcel/" + this.idx, {})
+          .then((res) => {
+            console.log("res.data.resultCode: " + res.data.resultCode);
+            if (res.data.resultCode == "00") {
+              alert("삭제되었습니다.");
+              //alert(JSON.stringify(res.data.resultMsg));
+              this.fnList();
+            } else {
+              alert("삭제되지 않았습니다.");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
   },
 };
 </script>

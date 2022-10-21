@@ -122,9 +122,22 @@ const routes = [
     meta: { requireLogin: true },
   },
   {
-    path: "/parcel/parcelUpdate",
+    path: "/parcel/parcelListUpdate",
     name: "parcelUpdate",
-    component: () => import("../views/parcel/parcelUpdate.vue"),
+    component: () => import("../views/parcel/parcelListUpdate.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/parcel/parcelInsert",
+    name: "parcelInsert",
+    component: () => import("../views/parcel/parcelInsert.vue"),
+    meta: { requireLogin: true },
+  },
+
+  {
+    path: "/keyContract/keyContractList",
+    name: "keyContractList",
+    component: () => import("../views/keyContract/keyContractList.vue"),
     meta: { requireLogin: true },
   },
 

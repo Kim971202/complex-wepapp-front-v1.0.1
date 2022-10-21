@@ -1,6 +1,15 @@
 <template>
   <div class="board">
     <h2>택배 정보 조회</h2>
+    <div class="common-buttons">
+      <button
+        type="button"
+        class="w3-button w3-round w3-teal"
+        v-on:click="fnWrite"
+      >
+        신규
+      </button>
+    </div>
 
     <table>
       <colgroup>
@@ -19,25 +28,25 @@
           </td>
           <th scope="row">종료일자</th>
           <td>
-            <input type="text" ref="authorInput" v-model.trim="endTime" />
+            <input type="text" ref="titleInput" v-model.trim="endTime" />
           </td>
         </tr>
         <tr>
           <th scope="row">동</th>
           <td>
-            <input type="text" ref="authorInput" v-model.trim="dongCode" />
+            <input type="text" ref="titleInput" v-model.trim="dongCode" />
           </td>
           <th scope="row">호</th>
           <td>
-            <input type="text" ref="authorInput" v-model.trim="hoCode" />
+            <input type="text" ref="titleInput" v-model.trim="hoCode" />
           </td>
           <th scope="row">수령여부</th>
           <td>
-            <input type="text" ref="authorInput" v-model.trim="parcelStatus" />
+            <input type="text" ref="titleInput" v-model.trim="parcelStatus" />
           </td>
           <th scope="row">통신결과</th>
           <td>
-            <input type="text" ref="authorInput" v-model.trim="sendResult" />
+            <input type="text" ref="titleInput" v-model.trim="sendResult" />
           </td>
         </tr>
       </tbody>
@@ -233,11 +242,11 @@ export default {
         size: this.size,
         dongCode: this.dongCode,
         hoCode: this.hoCode,
-        parcelFlag: this.$route.query.parcelFlag,
-        parcelCorp: this.$route.query.parcelCorp,
-        parcelStatus: this.$route.query.parcelStatus,
-        posUpdateDate: this.$route.query.posUpdateDate,
-        sendResult: this.$route.query.sendResult,
+        parcelFlag: this.parcelFlag,
+        parcelCorp: this.parcelCorp,
+        parcelStatus: this.parcelStatus,
+        posUpdateDate: this.posUpdateDate,
+        sendResult: this.sendResult,
       };
 
       this.axios
@@ -275,7 +284,7 @@ export default {
     },
     fnWrite() {
       this.$router.push({
-        path: "./insert",
+        path: "./parcelInsert",
       });
     },
     fnSearch() {

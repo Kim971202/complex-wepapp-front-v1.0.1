@@ -1,6 +1,15 @@
 <template>
   <div class="board">
-    <h2>주차 위치</h2>
+    <h2>주요연락처</h2>
+    <div class="common-buttons">
+      <button
+        type="button"
+        class="w3-button w3-round w3-teal"
+        v-on:click="fnWrite"
+      >
+        신규
+      </button>
+    </div>
 
     <table>
       <colgroup>
@@ -13,27 +22,14 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">시작일자</th>
+          <th scope="row">구분</th>
           <td>
-            <input type="text" ref="titleInput" v-model.trim="startTime" />
-          </td>
-          <th scope="row">종료일자</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="endTime" />
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">동</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="dongCode" />
-          </td>
-          <th scope="row">호</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="hoCode" />
-          </td>
-          <th scope="row">차량변호</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="hoCode" />
+            <input
+              type="text"
+              ref="titleInput"
+              placeholder="단지시설/주변상가/공공시관/기타시설 중 하나를 입력하세요"
+              v-model.trim="contractFlag"
+            />
           </td>
         </tr>
       </tbody>
@@ -61,33 +57,31 @@
   <div class="buttons">
     <div class="right">
       <button class="button blue" @click="fnSearch">검색</button>
-      <button class="button" @click="fnList">취소</button>
+      <!-- <button class="button" @click="fnList">취소</button> -->
     </div>
     <!-- <div class="common-buttons">
-          <button
-            type="button"
-            class="w3-button w3-round w3-blue-gray"
-            v-on:click="fnSearch"
-          >
-            검색
-          </button> -->
+              <button
+                type="button"
+                class="w3-button w3-round w3-blue-gray"
+                v-on:click="fnSearch"
+              >
+                검색
+              </button> -->
   </div>
   <table class="w3-table-all">
     <colgroup>
       <col style="width: 5%" />
-      <col style="width: 10%" />
-      <col style="width: 10%" />
       <col style="width: 20%" />
+      <col style="width: 30%" />
       <col style="width: 30%" />
       <col style="width: *" />
     </colgroup>
     <thead>
       <tr>
         <th>No</th>
-        <th>동</th>
-        <th>호</th>
-        <th>Tag ID</th>
-        <th>주차위치</th>
+        <th>구분</th>
+        <th>시설명</th>
+        <th>연락처</th>
         <th>등록일시</th>
       </tr>
     </thead>
@@ -100,22 +94,22 @@
         :key="i"
       >
         <td>{{ row.No }}</td>
-        <td>{{ row.dongCode }}</td>
-        <td>{{ row.hoCode }}</td>
-        <td>{{ row.tagName }}</td>
-        <td>{{ row.parkingLocation }}</td>
-        <td>{{ row.posUpdateDate }}</td>
+        <td>{{ row.contractFlag }}</td>
+        <td>{{ row.facilityName }}</td>
+        <td>{{ row.phoneNum }}</td>
+        <!-- <td>{{ row.parcelStatus }}</td> -->
+        <td>{{ row.insertDTime }}</td>
       </tr>
     </tbody>
   </table>
   <!-- <br />
-      <div class="buttons">
-        <div class="right">
-          <button class="w3-button w3-round w3-red" v-on:click="fnDelete">
-            삭제
-          </button>
-        </div>
-      </div> -->
+          <div class="buttons">
+            <div class="right">
+              <button class="w3-button w3-round w3-red" v-on:click="fnDelete">
+                삭제
+              </button>
+            </div>
+          </div> -->
   <div
     class="pagination w3-bar w3-padding-16 w3-small"
     v-if="paging.totalCount > 0"
@@ -187,11 +181,10 @@ export default {
       }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
-      dongCode: this.$route.query.dongCode,
-      hoCode: this.$route.query.hoCode,
-      tagName: this.$route.query.tagName,
-      parkingLocation: this.$route.query.parkingLocation,
-      posUpdateDate: this.$route.query.posUpdateDate,
+      contractFlag: this.$route.query.contractFlag,
+      facilityName: this.$route.query.facilityName,
+      phoneNum: this.$route.query.phoneNum,
+      insertDTime: this.$route.query.insertDTime,
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀
@@ -218,15 +211,14 @@ export default {
         // 데이터 전송
         page: this.page,
         size: this.size,
-        dongCode: this.dongCode,
-        hoCode: this.hoCode,
-        tagName: this.tagName,
-        parkingLocation: this.parkingLocation,
-        posUpdateDate: this.posUpdateDate,
+        contractFlag: this.contractFlag,
+        facilityName: this.facilityName,
+        phoneNum: this.phoneNum,
+        insertDTime: this.insertDTime,
       };
 
       this.axios
-        .get(this.$serverUrl + "/parking/getCarLocationList", {
+        .get(this.$serverUrl + "/keyContract/getKeyContract", {
           params: this.requestBody,
           headers: {},
         })
@@ -254,13 +246,13 @@ export default {
     fnView(idx) {
       this.requestBody.idx = idx;
       this.$router.push({
-        path: "./parkingLocDetail",
+        path: "./keyContractList",
         query: this.requestBody,
       });
     },
     // fnWrite() {
     //   this.$router.push({
-    //     path: "./insert",
+    //     path: "./keyContrctInsert",
     //   });
     // },
     fnSearch() {
@@ -288,11 +280,10 @@ export default {
     fnList() {
       this.page = 1;
       this.size = 10;
-      this.dongCode = "";
-      this.hoCode = "";
-      this.tagName = "";
-      this.parkingLocation = "";
-      this.posUpdateDate = "";
+      this.contractFlag = "";
+      this.facilityName = "";
+      this.phoneNum = "";
+      this.insertDTime = "";
 
       this.fnGetList();
     },

@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h1>This is an board write page</h1>
+    <h1>택배 상세 정보</h1>
     <table>
       <colgroup>
         <col style="width: 18.5%" />
@@ -15,8 +15,8 @@
           <th scope="row">수령여부</th>
           <td>
             <textarea
-              rows="10"
-              placeholder="내용을 입력하세요."
+              rows="1"
+              placeholder="택배 상태를 입력 하세요.(미수령/수령/반품)"
               ref="parcelStatusTextarea"
               v-model.trim="parcelStatus"
             ></textarea>
@@ -31,7 +31,7 @@
           <td><span v-html="hoCode"></span></td>
         </tr>
         <tr>
-          <th scope="row">메모(택배사)</th>
+          <th scope="row">메모(택배회사)</th>
           <td>{{ memo }}</td>
         </tr>
       </tbody>
@@ -77,7 +77,7 @@ export default {
     fnGetView() {
       if (this.idx !== undefined) {
         this.axios
-          .get(this.$serverUrl + "/parcel/parcelListDetail/" + this.idx, {
+          .get(this.$serverUrl + "/parcel/getDetailedParcelList/" + this.idx, {
             params: this.requestBody,
           })
           .then((res) => {
@@ -95,25 +95,25 @@ export default {
     fnList() {
       delete this.requestBody.idx;
       this.$router.push({
-        path: "./getparcelList",
+        path: "./parcelList",
         query: this.requestBody,
       });
     },
     fnView(idx) {
       this.requestBody.idx = idx;
       this.$router.push({
-        path: "./etparcelListdetail",
+        path: "./parcelListdetail",
         query: this.requestBody,
       });
     },
     fnSave() {
-      if (this.contents == "") {
+      if (this.parcelStatus == "") {
         alert("택배상태를 입력하세요.");
         this.$refs.parcelStatusTextArea.focus();
         return;
       }
 
-      let apiUrl = this.$serverUrl + "/parcel/parcelUpdate";
+      let apiUrl = this.$serverUrl + "/parcel/updateParcel/" + this.idx;
       this.form = {
         idx: this.idx,
         parcelStatus: this.parcelStatus,

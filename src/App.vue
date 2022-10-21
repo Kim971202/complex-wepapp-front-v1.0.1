@@ -53,6 +53,11 @@
                 >택배</router-link
               >
             </li>
+            <li class="nav-item">
+              <router-link to="/keyContract/keyContractList" class="nav-link"
+                >주요연락처</router-link
+              >
+            </li>
             <!-- ------------------------------------------------------------------------------------------------- -->
           </ul>
           <div class="navbar-info">
