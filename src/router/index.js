@@ -140,7 +140,12 @@ const routes = [
     component: () => import("../views/keyContract/keyContractList.vue"),
     meta: { requireLogin: true },
   },
-
+  {
+    path: "/complaint/complaintList",
+    name: "complaintList",
+    component: () => import("../views/complaint/complaintList.vue"),
+    meta: { requireLogin: true },
+  },
   /************************************************************************************************************** */
 ];
 
