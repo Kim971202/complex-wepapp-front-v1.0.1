@@ -63,6 +63,11 @@
                 >민원관리</router-link
               >
             </li>
+            <li class="nav-item">
+              <router-link to="/visitCar/visitCarList" class="nav-link"
+                >방문차량</router-link
+              >
+            </li>
             <!-- ------------------------------------------------------------------------------------------------- -->
           </ul>
           <div class="navbar-info">

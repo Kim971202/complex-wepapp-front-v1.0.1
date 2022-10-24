@@ -171,6 +171,31 @@ const routes = [
     component: () => import("../views/complaint/complaintListUpdate.vue"),
     meta: { requireLogin: true },
   },
+
+  {
+    path: "/visitCar/visitCarList",
+    name: "vistCarList",
+    component: () => import("../views/visitCar/visitCarList.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/visitCar/visitCarListDetail",
+    name: "vistCarListDetail",
+    component: () => import("../views/visitCar/visitCarListDetail.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/visitCar/visitCarInsert",
+    name: "visitCarInsert",
+    component: () => import("../views/visitCar/visitCarInsert.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/visitCar/visitCarListUpdate",
+    name: "visitCarListUpdate",
+    component: () => import("../views/visitCar/visitCarListUpdate.vue"),
+    meta: { requireLogin: true },
+  },
   /************************************************************************************************************** */
 ];
 
