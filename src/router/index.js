@@ -141,9 +141,34 @@ const routes = [
     meta: { requireLogin: true },
   },
   {
+    path: "/keyContract/keyContractUpdate",
+    name: "keyContractUpdate",
+    component: () => import("../views/keyContract/keyContractUpdate.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/keyContract/keyContractInsert",
+    name: "keyContractInsert",
+    component: () => import("../views/keyContract/keyContractInsert.vue"),
+    meta: { requireLogin: true },
+  },
+
+  {
     path: "/complaint/complaintList",
     name: "complaintList",
     component: () => import("../views/complaint/complaintList.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/complaint/complaintListDetail",
+    name: "complaintListDetail",
+    component: () => import("../views/complaint/complaintListDetail.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/complaint/complaintListUpdate",
+    name: "complaintListUpdate",
+    component: () => import("../views/complaint/complaintListUpdate.vue"),
     meta: { requireLogin: true },
   },
   /************************************************************************************************************** */

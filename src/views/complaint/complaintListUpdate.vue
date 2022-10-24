@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h1>택배 상세 정보</h1>
+    <h1>민원신청 상세정보</h1>
     <table>
       <colgroup>
         <col style="width: 18.5%" />
@@ -8,30 +8,46 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">도착일시</th>
-          <td><span v-html="arrivalTime"></span></td>
+          <th scope="row">신청일자</th>
+          <td>{{ appDate }}</td>
         </tr>
         <tr>
-          <th scope="row">수령여부</th>
+          <th scope="row">민원유형</th>
+          <td>{{ appCategory }}</td>
+        </tr>
+        <tr>
+          <th scope="row">민원내용</th>
+          <td><span v-html="appContent"></span></td>
+        </tr>
+        <tr>
+          <th scope="row">신청자</th>
+          <td><span v-html="applicant"></span></td>
+        </tr>
+        <tr>
+          <th scope="row">신청방법</th>
+          <td>{{ appMethod }}</td>
+        </tr>
+        <tr>
+          <th scope="row">접수일자</th>
+          <td>{{ appReceiptDate }}</td>
+        </tr>
+        <tr>
+          <th scope="row">처리일자</th>
+          <td>{{ appCompleteDate }}</td>
+        </tr>
+        <tr>
+          <th scope="row">진행상태</th>
           <td>
             <textarea
               rows="1"
-              placeholder="택배 상태를 입력 하세요.(미수령/수령/반품)"
-              ref="parcelStatusTextarea"
-              v-model.trim="parcelStatus"
+              placeholder="민원 상태를 입력 하세요.(취소/신청/접수/완료)"
+              ref="progressStatusTextarea"
+              v-model.trim="progressStatus"
             ></textarea>
           </td>
         </tr>
         <tr>
-          <th scope="row">동</th>
-          <td><span v-html="dongCode"></span></td>
-        </tr>
-        <tr>
-          <th scope="row">호</th>
-          <td><span v-html="hoCode"></span></td>
-        </tr>
-        <tr>
-          <th scope="row">메모(택배회사)</th>
+          <th scope="row">메모</th>
           <td>{{ memo }}</td>
         </tr>
       </tbody>
@@ -63,10 +79,14 @@ export default {
     return {
       requestBody: this.$route.query,
       idx: this.$route.query.idx,
-      arrivalTime: "",
-      parcelStatus: "",
-      dongCode: "",
-      hoCode: "",
+      appDate: "",
+      appCategory: "",
+      appContent: "",
+      applicant: "",
+      appMethod: "",
+      appReceiptDate: "",
+      appCompleteDate: "",
+      progressStatus: "",
       memo: "",
     };
   },
@@ -77,14 +97,23 @@ export default {
     fnGetView() {
       if (this.idx !== undefined) {
         this.axios
-          .get(this.$serverUrl + "/parcel/getDetailedParcelList/" + this.idx, {
-            params: this.requestBody,
-          })
+          .get(
+            this.$serverUrl +
+              "/complaint/getDetailedApplicationList/" +
+              this.idx,
+            {
+              params: this.requestBody,
+            }
+          )
           .then((res) => {
-            this.arrivalTime = res.data.arrivalTime;
-            this.parcelStatus = res.data.parcelStatus;
-            this.dongCode = res.data.dongCode;
-            this.hoCode = res.data.hoCode;
+            this.appDate = res.data.appDate;
+            this.appCategory = res.data.appCategory;
+            this.appContent = res.data.appContent;
+            this.applicant = res.data.applicant;
+            this.appMethod = res.data.appMethod;
+            this.appReceiptDate = res.data.appReceiptDate;
+            this.appCompleteDate = res.data.appCompleteDate;
+            this.progressStatus = res.data.progressStatus;
             this.memo = res.data.memo;
           })
           .catch((err) => {
@@ -95,28 +124,28 @@ export default {
     fnList() {
       delete this.requestBody.idx;
       this.$router.push({
-        path: "./parcelList",
+        path: "./complaintList",
         query: this.requestBody,
       });
     },
     fnView(idx) {
       this.requestBody.idx = idx;
       this.$router.push({
-        path: "./parcelListDetail",
+        path: "./complaintListDetail",
         query: this.requestBody,
       });
     },
     fnSave() {
-      if (this.parcelStatus == "") {
-        alert("택배상태를 입력하세요.");
-        this.$refs.parcelStatusTextArea.focus();
+      if (this.progressStatus == "") {
+        alert("접수상태를 입력하세요.");
+        this.$refs.progressStatusTextArea.focus();
         return;
       }
 
-      let apiUrl = this.$serverUrl + "/parcel/updateParcel/" + this.idx;
+      let apiUrl = this.$serverUrl + "/complaint/updateComplaint/" + this.idx;
       this.form = {
         idx: this.idx,
-        parcelStatus: this.parcelStatus,
+        progressStatus: this.progressStatus,
       };
 
       var result = confirm("수정하시겠습니까?");

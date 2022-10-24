@@ -256,4 +256,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.table:hover {
+  background-color: #87ceeb;
+}
+</style>

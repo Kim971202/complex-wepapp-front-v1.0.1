@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h1>택배 정보 입력</h1>
+    <h1>주요연락처 등록</h1>
     <table>
       <colgroup>
         <col style="width: 18.5%" />
@@ -8,82 +8,49 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">도착일시</th>
+          <th scope="row">구 분</th>
           <td>
             <input
               type="text"
-              placeholder="도착일시를 입력하세요"
-              ref="arrivalTimeInput"
-              v-model.trim="arrivalTime"
+              placeholder="단지시설/주변상가/공공기관/기타시설 중 선택하세요"
+              ref="contractFlagInput"
+              v-model.trim="contractFlag"
             />
           </td>
         </tr>
         <tr>
-          <th scope="row">수령여부</th>
+          <th scope="row">시설명</th>
           <td>
             <input
               type="text"
-              placeholder="미수령 or 수령 or 반품"
-              ref="parcelStatusInput"
-              v-model.trim="parcelStatus"
+              placeholder="시설의 명칭을 입력하세요"
+              ref="facilityNameInput"
+              v-model.trim="facilityName"
             />
           </td>
         </tr>
         <tr>
-          <th scope="row">동</th>
+          <th scope="row">연락처</th>
           <td>
             <input
               type="text"
-              placeholder="동 입력"
-              ref="dongCodeInput"
-              v-model.trim="dongCode"
+              placeholder="연락처를 입력하세요"
+              ref="phoneNumInput"
+              v-model.trim="phoneNum"
             />
           </td>
         </tr>
         <tr>
-          <th scope="row">호</th>
+          <th scope="row">내 용</th>
           <td>
             <input
               type="text"
-              placeholder="호 입력"
-              ref="hoCodeInput"
-              v-model.trim="hoCode"
-            />
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">메모</th>
-          <td>
-            <input
-              type="text"
-              placeholder="택배회사 등 기타사항을 입력하세요."
+              placeholder=""
               ref="memoInput"
               v-model.trim="memo"
             />
           </td>
         </tr>
-        <!-- <tr>
-          <th scope="row">수령여부</th>
-          <td>
-            <input
-              type="text"
-              placeholder="제목을 입력하세요."
-              ref="titleInput"
-              v-model.trim="title"
-            />
-          </td>
-        </tr> -->
-        <!-- <tr>
-          <th scope="row">내용</th>
-          <td>
-            <textarea
-              rows="10"
-              placeholder="내용을 입력하세요."
-              ref="contentsTextarea"
-              v-model.trim="contents"
-            ></textarea>
-          </td>
-        </tr> -->
       </tbody>
     </table>
 
@@ -113,10 +80,9 @@ export default {
     return {
       requestBody: this.$route.query,
       id: "",
-      arrivalTime: "",
-      parcelStatus: "",
-      dongCode: "",
-      hoCode: "",
+      contractFlag: "",
+      facilityName: "",
+      phoneNum: "",
       memo: "",
       //   author: this.$store.state.loginStore.memberId,
     };
@@ -126,31 +92,30 @@ export default {
     fnList() {
       delete this.requestBody.idx;
       this.$router.push({
-        path: "./parcelList",
+        path: "./keyContractList",
         query: this.requestBody,
       });
     },
     fnSave() {
-      if (this.arrivalTime == "") {
-        alert("도착일시를 입력하세요");
-        this.$refs.arrivalTimeInput.focus();
+      if (this.contractFlag == "") {
+        alert("단지시설/주변상가/공공기관/기타시설 중 하나를 입력하세요");
+        this.$refs.contractFlagInput.focus();
         return;
-      } else if (this.dongCode == "") {
-        alert("동을 입력하세요.");
-        this.$refs.dongCodeInput.focus();
+      } else if (this.facilityName == "") {
+        alert("시설명을 입력하세요");
+        this.$refs.facilityNameInput.focus();
         return;
-      } else if (this.hoCode == "") {
-        alert("호을 입력하세요.");
-        this.$refs.hoCodeInput.focus();
+      } else if (this.phoneNum == "") {
+        alert("연락처를 입력하세요");
+        this.$refs.phoneNumInput.focus();
         return;
       }
 
-      let apiUrl = this.$serverUrl + "/parcel/uploadParcel";
+      let apiUrl = this.$serverUrl + "/keyContract/uploadKeyContract";
       this.form = {
-        arrivalTime: this.arrivalTime,
-        parcelStatus: this.parcelStatus,
-        dongCode: this.dongCode,
-        hoCode: this.hoCode,
+        contractFlag: this.contractFlag,
+        facilityName: this.facilityName,
+        phoneNum: this.phoneNum,
         memo: this.memo,
       };
 
@@ -163,7 +128,7 @@ export default {
           .then((res) => {
             console.log("res.data.resultCode: " + res.data.resultCode);
             if (res.data.resultCode == "00") {
-              alert("글이 등록되었습니다.");
+              //alert("글이 등록되었습니다.");
               //alert(JSON.stringify(res.data.resultMsg));
               this.fnList();
             } else {

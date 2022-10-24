@@ -85,25 +85,25 @@
     <colgroup>
       <col style="width: 5%" />
       <col style="width: 10%" />
-      <col style="width: 15%" />
       <col style="width: 10%" />
-      <col style="width: 5%" />
-      <col style="width: 5%" />
+      <col style="width: 10%" />
+      <col style="width: 10%" />
+      <!-- <col style="width: 5%" /> -->
       <col style="width: *" />
       <col style="width: *" />
-      <col style="width: *" />
+      <col style="width: 10%" />
     </colgroup>
     <thead>
       <tr>
         <th>No</th>
-        <th>민원제목</th>
+        <!-- <th>민원제목</th> -->
         <th>신청일자</th>
-        <th>민원유형</th>
         <th>동</th>
         <th>호</th>
-        <th>진행단계</th>
+        <th>신청방법</th>
         <th>접수일자</th>
         <th>처리일자</th>
+        <th>진행단계</th>
       </tr>
     </thead>
 
@@ -115,14 +115,14 @@
         :key="i"
       >
         <td>{{ row.No }}</td>
-        <td>{{ row.appTitle }}</td>
+        <!-- <td>{{ row.appTitle }}</td> -->
         <td>{{ row.appDate }}</td>
-        <td>{{ row.appCode }}</td>
         <td>{{ row.dongCode }}</td>
         <td>{{ row.hoCode }}</td>
-        <td>{{ row.progressStatus }}</td>
+        <td>{{ row.appMethod }}</td>
         <td>{{ row.appReceiptDate }}</td>
         <td>{{ row.appCompleteDate }}</td>
+        <td>{{ row.progressStatus }}</td>
       </tr>
     </tbody>
   </table>
@@ -205,14 +205,15 @@ export default {
       }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
-      appTitle: this.$route.query.appTitle,
+      // appTitle: this.$route.query.appTitle,
       appDate: this.$route.query.appDate,
-      appCode: this.$route.query.appCode,
-      progressStatus: this.$route.query.progressStatus,
+      // appCode: this.$route.query.appCode,
       dongCode: this.$route.query.dongCode,
       hoCode: this.$route.query.hoCode,
+      appMethod: this.$route.query.appMethod,
       appReceiptDate: this.$route.query.appReceiptDate,
       appCompleteDate: this.$route.query.appCompleteDate,
+      progressStatus: this.$route.query.progressStatus,
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀
@@ -239,14 +240,15 @@ export default {
         // 데이터 전송
         page: this.page,
         size: this.size,
-        appTitle: this.appTitle,
+        // appTitle: this.appTitle,
         appDate: this.appDate,
-        appCode: this.appCode,
-        progressStatus: this.progressStatus,
+        // appCode: this.appCode,
         dongCode: this.dongCode,
         hoCode: this.hoCode,
+        appMethod: this.appMethod,
         appReceiptDate: this.appReceiptDate,
         appCompleteDate: this.appCompleteDate,
+        progressStatus: this.progressStatus,
       };
 
       this.axios
@@ -312,14 +314,15 @@ export default {
     fnList() {
       this.page = 1;
       this.size = 10;
-      this.appTitle;
+      // this.appTitle;
       this.appDate = "";
-      this.appCode = "";
-      this.progressStatus = "";
+      // this.appCode = "";
       this.dongCode = "";
       this.hoCode = "";
+      this.appMethod = "";
       this.appReceiptDate = "";
       this.appCompleteDate = "";
+      this.progressStatus = "";
 
       this.fnGetList();
     },

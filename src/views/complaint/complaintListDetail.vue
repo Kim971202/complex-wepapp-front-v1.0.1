@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h2>택배 상세정보</h2>
+    <h2>민원신청 상세정보</h2>
     <table>
       <colgroup>
         <col style="width: 18.5%" />
@@ -8,24 +8,40 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">도착일시</th>
-          <td>{{ arrivalTime }}</td>
+          <th scope="row">신청일자</th>
+          <td>{{ appDate }}</td>
         </tr>
         <tr>
-          <th scope="row">수령여부</th>
+          <th scope="row">민원유형</th>
           <!-- <span v-html="parcelStatus"></span> -->
-          <td>{{ parcelStatus }}</td>
+          <td>{{ appCategory }}</td>
         </tr>
         <tr>
-          <th scope="row">동</th>
-          <td><span v-html="dongCode"></span></td>
+          <th scope="row">민원내용</th>
+          <td><span v-html="appContent"></span></td>
         </tr>
         <tr>
-          <th scope="row">호</th>
-          <td><span v-html="hoCode"></span></td>
+          <th scope="row">신청자</th>
+          <td><span v-html="applicant"></span></td>
         </tr>
         <tr>
-          <th scope="row">메모(택배회사)</th>
+          <th scope="row">신청방법</th>
+          <td>{{ appMethod }}</td>
+        </tr>
+        <tr>
+          <th scope="row">접수일자</th>
+          <td>{{ appReceiptDate }}</td>
+        </tr>
+        <tr>
+          <th scope="row">처리일자</th>
+          <td>{{ appCompleteDate }}</td>
+        </tr>
+        <tr>
+          <th scope="row">진행상태</th>
+          <td>{{ progressStatus }}</td>
+        </tr>
+        <tr>
+          <th scope="row">메모</th>
           <td>{{ memo }}</td>
         </tr>
       </tbody>
@@ -64,10 +80,14 @@ export default {
     return {
       requestBody: this.$route.query,
       idx: this.$route.query.idx,
-      arrivalTime: "",
-      parcelStatus: "",
-      dongCode: "",
-      hoCode: "",
+      appDate: "",
+      appCategory: "",
+      appContent: "",
+      applicant: "",
+      appMethod: "",
+      appReceiptDate: "",
+      appCompleteDate: "",
+      progressStatus: "",
       memo: "",
     };
   },
@@ -77,15 +97,22 @@ export default {
   methods: {
     fnGetView() {
       this.axios
-        .get(this.$serverUrl + "/parcel/getDetailedParcelList/" + this.idx, {
-          params: this.requestBody,
-        })
+        .get(
+          this.$serverUrl + "/complaint/getDetailedApplicationList/" + this.idx,
+          {
+            params: this.requestBody,
+          }
+        )
 
         .then((res) => {
-          this.arrivalTime = res.data.arrivalTime;
-          this.parcelStatus = res.data.parcelStatus;
-          this.dongCode = res.data.dongCode;
-          this.hoCode = res.data.hoCode;
+          this.appDate = res.data.appDate;
+          this.appCategory = res.data.appCategory;
+          this.appContent = res.data.appContent;
+          this.applicant = res.data.applicant;
+          this.appMethod = res.data.appMethod;
+          this.appReceiptDate = res.data.appReceiptDate;
+          this.appCompleteDate = res.data.appCompleteDate;
+          this.progressStatus = res.data.progressStatus;
           this.memo = res.data.memo.split("\n").join("<br>"); //개행처리
           // this.contents = res.data.contents.split("\n").join("<br>"); //개행처리
           // this.created_at = res.data.created_at;
@@ -100,13 +127,13 @@ export default {
     fnList() {
       delete this.requestBody.idx;
       this.$router.push({
-        path: "./parcelList",
+        path: "./complaintList",
         query: this.requestBody,
       });
     },
     fnUpdate() {
       this.$router.push({
-        path: "./parcelListUpdate",
+        path: "./complaintListUpdate",
         query: this.requestBody,
       });
     },
@@ -114,7 +141,10 @@ export default {
       var result = confirm("삭제하시겠습니까?");
       if (result) {
         this.axios
-          .delete(this.$serverUrl + "/parcel/deleteParcel/" + this.idx, {})
+          .delete(
+            this.$serverUrl + "/complaint/deleteComplaint/" + this.idx,
+            {}
+          )
           .then((res) => {
             console.log("res.data.resultCode: " + res.data.resultCode);
             if (res.data.resultCode == "00") {

@@ -27,7 +27,7 @@
             <input
               type="text"
               ref="titleInput"
-              placeholder="단지시설/주변상가/공공시관/기타시설 중 하나를 입력하세요"
+              placeholder="단지시설/주변상가/공공기관/기타시설 중 하나를 입력하세요"
               v-model.trim="contractFlag"
             />
           </td>
@@ -57,59 +57,75 @@
   <div class="buttons">
     <div class="right">
       <button class="button blue" @click="fnSearch">검색</button>
+      <button class="w3-button w3-round w3-red" @click="fnDelete">삭제</button>
       <!-- <button class="button" @click="fnList">취소</button> -->
     </div>
-    <!-- <div class="common-buttons">
-              <button
-                type="button"
-                class="w3-button w3-round w3-blue-gray"
-                v-on:click="fnSearch"
-              >
-                검색
-              </button> -->
   </div>
+  <!-- 체크박스 추가 -->
+  <div class="text-uppercase text-bold">id selected: {{ selected }}</div>
+  <!-- ------------ -->
   <table class="w3-table-all">
     <colgroup>
       <col style="width: 5%" />
+      <col style="width: 5%" />
+      <col style="width: 20%" />
       <col style="width: 20%" />
       <col style="width: 30%" />
-      <col style="width: 30%" />
       <col style="width: *" />
+      <col style="width: 5%" />
     </colgroup>
     <thead>
       <tr>
+        <!-- 체크박스 추가 -->
+        <label class="form-checkbox">
+          <input type="checkbox" v-model="selectAll" @click="select" />
+          <i class="form-icon"></i>
+        </label>
+        <!-- ------------ -->
         <th>No</th>
         <th>구분</th>
         <th>시설명</th>
         <th>연락처</th>
         <th>등록일시</th>
+        <th>수정</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr
+      <!-- <tr
         class="table"
         v-on:click="fnView(`${row.idx}`)"
         v-for="(row, i) in list"
         :key="i"
-      >
+      ></tr> -->
+      <!-- 체크박스 추가 -->
+      <tr class="table" v-for="(row, i) in list" :key="i">
+        <td>
+          <label class="form-checkbox">
+            <input type="checkbox" :value="row.idx" v-model="selected" />
+            <i class="form-icon"></i>
+          </label>
+        </td>
+        <!-- --------------------------------------------------------------------------- -->
         <td>{{ row.No }}</td>
         <td>{{ row.contractFlag }}</td>
         <td>{{ row.facilityName }}</td>
         <td>{{ row.phoneNum }}</td>
         <!-- <td>{{ row.parcelStatus }}</td> -->
         <td>{{ row.insertDTime }}</td>
+        <td>
+          <div class="table-button-container">
+            <button
+              class="w3-button w3-round w3-red"
+              v-on:click="fnView(`${row.idx}`)"
+            >
+              <i class="fa fa-remove"></i> Edit</button
+            >&nbsp;&nbsp;
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
-  <!-- <br />
-          <div class="buttons">
-            <div class="right">
-              <button class="w3-button w3-round w3-red" v-on:click="fnDelete">
-                삭제
-              </button>
-            </div>
-          </div> -->
   <div
     class="pagination w3-bar w3-padding-16 w3-small"
     v-if="paging.totalCount > 0"
@@ -168,6 +184,10 @@ export default {
   data() {
     //변수생성
     return {
+      /** 체크박스 추가 */
+      selected: [],
+      selectAll: false,
+      /************** */
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: "", //게시판 숫자처리
@@ -206,6 +226,16 @@ export default {
     this.fnGetList();
   },
   methods: {
+    /** 체크박스 추가 */
+    select() {
+      this.selected = [];
+      if (!this.selectAll) {
+        for (let i in this.list) {
+          this.selected.push(this.list[i].idx);
+        }
+      }
+    },
+    /************** */
     fnGetList() {
       this.requestBody = {
         // 데이터 전송
@@ -246,15 +276,15 @@ export default {
     fnView(idx) {
       this.requestBody.idx = idx;
       this.$router.push({
-        path: "./keyContractList",
+        path: "./keyContractUpdate",
         query: this.requestBody,
       });
     },
-    // fnWrite() {
-    //   this.$router.push({
-    //     path: "./keyContrctInsert",
-    //   });
-    // },
+    fnWrite() {
+      this.$router.push({
+        path: "./keyContractInsert",
+      });
+    },
     fnSearch() {
       //검색
       this.paging.page = 1;
@@ -287,32 +317,42 @@ export default {
 
       this.fnGetList();
     },
-    // fnDelete() {
-    //   var result = confirm("삭제하시겠습니까?");
-    //   if (result) {
-    //     this.axios
-    //       .delete(this.$serverUrl + "/inoutCar/deleteCarIOList/" + this.idx, {})
-    //       .then((res) => {
-    //         console.log("res.data.resultCode: " + res.data.resultCode);
-    //         if (res.data.resultCode == "00") {
-    //           alert("삭제되었습니다.");
-    //           //alert(JSON.stringify(res.data.resultMsg));
-    //           this.fnList();
-    //         } else {
-    //           alert("삭제되지 않았습니다.");
-    //         }
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   }
-    // },
+
+    fnDelete() {
+      var result = confirm("삭제하시겠습니까?");
+      console.log("this.selected.length: " + this.selected.length);
+      for (let i = 0; i < this.selected.length; ++i) {
+        // this.selected.push(this.list[i].idx);
+        if (result) {
+          this.axios
+            .delete(
+              this.$serverUrl +
+                "/keyContract/deleteKeyContract/" +
+                this.list[i].idx,
+              {}
+            )
+            .then((res) => {
+              console.log("res.data.resultCode: " + res.data.resultCode);
+              if (res.data.resultCode == "00") {
+                alert("삭제되었습니다.");
+                //alert(JSON.stringify(res.data.resultMsg));
+                this.fnList();
+              } else {
+                alert("삭제되지 않았습니다.");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-.table:hover {
+/* .table:hover {
   background-color: #87ceeb;
-}
+} */
 </style>
