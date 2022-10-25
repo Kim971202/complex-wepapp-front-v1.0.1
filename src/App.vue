@@ -68,6 +68,11 @@
                 >방문차량</router-link
               >
             </li>
+            <li class="nav-item">
+              <router-link to="/contractDoc/contractDocList" class="nav-link"
+                >계약자료</router-link
+              >
+            </li>
             <!-- ------------------------------------------------------------------------------------------------- -->
           </ul>
           <div class="navbar-info">

@@ -196,6 +196,13 @@ const routes = [
     component: () => import("../views/visitCar/visitCarListUpdate.vue"),
     meta: { requireLogin: true },
   },
+
+  {
+    path: "/contractDoc/contractDocList",
+    name: "contractDocList",
+    component: () => import("../views/contractDoc/contractDocList.vue"),
+    meta: { requireLogin: true },
+  },
   /************************************************************************************************************** */
 ];
 
