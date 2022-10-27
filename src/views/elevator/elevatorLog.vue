@@ -1,51 +1,92 @@
 <template>
   <div class="board">
-    <h2>엘리베이터 로그</h2>
-
+    <h2>엘리베이터 제어이력</h2>
+    <table>
+      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
+    </table>
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: *" />
-        <col style="width: 15%" />
-        <col style="width: *" />
-        <col style="width: 15%" />
-        <col style="width: *" />
+        <col style="width: 35%" />
         <col style="width: 15%" />
         <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">시작일자</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="startTime" />
+          <th scope="row">조회기간</th>
+
+          <td style="float: center">
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-bind:disabled="startDate == ''"
+              v-model.trim="startDate"
+            />
+            &emsp;~&emsp;
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-bind:disabled="endDate == ''"
+              v-model.trim="endDate"
+            />
           </td>
-          <th scope="row">종료일자</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="endTime" />
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">요청자</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="endTime" />
-          </td>
-          <th scope="row">방향</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="endTime" />
-          </td>
-        </tr>
-        <tr>
+
           <th scope="row">통신결과</th>
           <td>
-            <input type="text" ref="authorInput" v-model.trim="endTime" />
+            <select
+              v-model="commResult"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">----전체----</option>
+              <option value="성공">성공</option>
+              <option value="실패">실패</option>
+            </select>
           </td>
-          <th scope="row">동</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="dongCode" />
+        </tr>
+        <tr>
+          <th scope="row">세대정보</th>
+          <td style="float: center">
+            &emsp;&emsp;
+            <select
+              v-model="dongCode"
+              @change="onChange($event)"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in dong_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;동&nbsp;&nbsp;
+            <select
+              v-model="hoCode"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in ho_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;호
           </td>
-          <th scope="row">호</th>
+          <th scope="row">제어방향</th>
           <td>
-            <input type="text" ref="authorInput" v-model.trim="hoCode" />
+            <select
+              v-model="elvDirection"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">----전체----</option>
+              <option value="상향">상향</option>
+              <option value="하향">하향</option>
+            </select>
           </td>
         </tr>
       </tbody>
@@ -87,34 +128,34 @@
   <table class="w3-table-all">
     <colgroup>
       <col style="width: 5%" />
-      <col style="width: 20%" />
-      <col style="width: *" />
-      <col style="width: *" />
-      <col style="width: *" />
       <col style="width: 10%" />
-      <col style="width: 20%" />
+      <col style="width: 10%" />
+      <col style="width: 15%" />
+      <col style="width: 15%" />
+      <col style="width: *" />
+      <col style="width: *" />
       <col style="width: 10%" />
     </colgroup>
     <thead>
       <tr>
         <th>No</th>
-        <th>제어요청시간</th>
-        <th>제어기기</th>
-        <th>방향</th>
         <th>동</th>
         <th>호</th>
+        <th>제어기기</th>
+        <th>재어방향</th>
+        <th>제어요청시간</th>
         <th>통신시간</th>
-        <th>결과</th>
+        <th>통신결과</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="(row, i) in list" :key="i">
         <td>{{ row.No }}</td>
-        <td>{{ row.controlReqDTime }}</td>
-        <td>{{ row.reqMethod }}</td>
-        <td>{{ row.direction }}</td>
         <td>{{ row.dongCode }}</td>
         <td>{{ row.hoCode }}</td>
+        <td>{{ row.reqMethod }}</td>
+        <td>{{ row.elvDirection }}</td>
+        <td>{{ row.controlReqDTime }}</td>
         <td>{{ row.commDTime }}</td>
         <td>{{ row.commResult }}</td>
       </tr>
@@ -199,13 +240,17 @@ export default {
       }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
-      startTime: this.$route.query.startTime,
-      endTime: this.$route.query.endTime,
+      startDate: this.$route.query.startDate,
+      endDate: this.$route.query.endDate,
       reqMethod: this.$route.query.reqMethod,
       dongCode: this.$route.query.dongCode,
       hoCode: this.$route.query.hoCode,
+      elvDirection: this.$route.query.elvDirection,
       commDTime: this.$route.query.commDTime,
-      sendResult: this.$route.query.sendResult,
+      commResult: this.$route.query.commResult,
+      dong_itmes: [],
+      ho_items: [],
+      items: [],
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀
@@ -224,21 +269,50 @@ export default {
     };
   },
   mounted() {
+    this.fnGetDong();
     this.fnGetList();
   },
   methods: {
+    fnGetDong() {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/dongList")
+        .then((res) => {
+          this.dong_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    onChange(event) {
+      console.log("event =>" + event.target.value);
+      //alert(this.dongCode);
+      this.fnGetDongho(this.dongCode);
+    },
+    fnGetDongho(dongCode) {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/donghoList?dongCode=" + dongCode)
+        .then((res) => {
+          this.ho_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     fnGetList() {
       this.requestBody = {
         // 데이터 전송
         page: this.page,
         size: this.size,
-        startTime: this.startTime,
-        endTime: this.endTime,
+        startDate: this.startDate,
+        endDate: this.endDate,
         reqMethod: this.reqMethod,
+        elvDirection: this.elvDirection,
         dongCode: this.dongCode,
         hoCode: this.hoCode,
         commDTime: this.commDTime,
-        sendResult: this.sendResult,
+        commResult: this.commResult,
       };
 
       this.axios
@@ -310,36 +384,18 @@ export default {
     fnList() {
       this.page = 1;
       this.size = 10;
+      this.startDate = "";
+      this.endDate = "";
       this.controlReqDtime = "";
       this.reqMethod = "";
       this.elvDirection = "";
       this.dongCode = "";
       this.hoCode = "";
       this.commDTime = "";
-      this.sendResult = "";
+      this.commResult = "";
 
       this.fnGetList();
     },
-    // fnDelete() {
-    //   var result = confirm("삭제하시겠습니까?");
-    //   if (result) {
-    //     this.axios
-    //       .delete(this.$serverUrl + "/inoutCar/deleteCarIOList/" + this.idx, {})
-    //       .then((res) => {
-    //         console.log("res.data.resultCode: " + res.data.resultCode);
-    //         if (res.data.resultCode == "00") {
-    //           alert("삭제되었습니다.");
-    //           //alert(JSON.stringify(res.data.resultMsg));
-    //           this.fnList();
-    //         } else {
-    //           alert("삭제되지 않았습니다.");
-    //         }
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   }
-    // },
   },
 };
 </script>

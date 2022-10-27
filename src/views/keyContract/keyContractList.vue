@@ -116,7 +116,7 @@
         <td>
           <div class="table-button-container">
             <button
-              class="w3-button w3-round w3-red"
+              class="w3-button w3-round w3-green"
               v-on:click="fnView(`${row.idx}`)"
             >
               <i class="fa fa-remove"></i> Edit</button

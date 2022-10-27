@@ -14,12 +14,11 @@
         <tr>
           <th scope="row">수령여부</th>
           <td>
-            <textarea
-              rows="1"
-              placeholder="택배 상태를 입력 하세요.(미수령/수령/반품)"
-              ref="parcelStatusTextarea"
-              v-model.trim="parcelStatus"
-            ></textarea>
+            <select v-model="parcelStatus" ref="parcelStatusInput">
+              <option value="미수령">미수령</option>
+              <option value="수령">수령</option>
+              <option value="반품">반품</option>
+            </select>
           </td>
         </tr>
         <tr>
@@ -32,7 +31,14 @@
         </tr>
         <tr>
           <th scope="row">메모(택배회사)</th>
-          <td>{{ memo }}</td>
+          <td colspan="3">
+            <textarea
+              rows="3"
+              placeholder="메모를 입력하세요."
+              ref="memoTextarea"
+              v-model.trim="memo"
+            ></textarea>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -43,7 +49,7 @@
         class="w3-button w3-round w3-blue-gray"
         v-on:click="fnSave"
       >
-        수정</button
+        저장</button
       >&nbsp;
       <button
         type="button"
@@ -68,6 +74,8 @@ export default {
       dongCode: "",
       hoCode: "",
       memo: "",
+
+      items: [],
     };
   },
   mounted() {

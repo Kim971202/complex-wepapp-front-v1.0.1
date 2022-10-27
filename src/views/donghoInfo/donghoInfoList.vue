@@ -1,61 +1,30 @@
 <template>
   <div class="board">
-    <h2>입출차정보</h2>
-    <table>
-      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
-    </table>
+    <h2>동호정보</h2>
+    <div class="common-buttons">
+      <!-- <button
+        type="button"
+        class="w3-button w3-round w3-teal"
+        v-on:click="fnWrite"
+      >
+        신규
+      </button> -->
+    </div>
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: 35%" />
-        <col style="width: 15%" />
         <col style="width: *" />
+        <col style="width: 15%" />
+        <col style="width: 45%" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">조회기간</th>
-
+          <th scope="row">동호</th>
           <td style="float: center">
-            <!-- <input
-              type="checkbox"
-              v-model="moveOutDtime"
-              true-value="yes"
-              false-value=""
-              style="width: 30px"
-            /> -->
-            <!-- {{ moveOutDtime }} -->
-            <input
-              type="date"
-              style="width: 150px; text-align: center"
-              v-model.trim="startTime"
-            />
-            &emsp;~&emsp;
-            <input
-              type="date"
-              style="width: 150px; text-align: center"
-              v-model.trim="endTime"
-            />
-          </td>
-          <th scope="row">통신결과</th>
-          <td>
-            <select
-              v-model="sendResult"
-              style="width: 150px; height: 25px; text-align: center"
-            >
-              <option value="">----전체----</option>
-              <option value="성공">성공</option>
-              <option value="실패">실패</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">세대정보</th>
-          <td style="float: center">
-            &emsp;&emsp;
             <select
               v-model="dongCode"
               @change="onChange($event)"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 100px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -66,10 +35,10 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;동&nbsp;&nbsp;
+            동&nbsp;&nbsp;
             <select
               v-model="hoCode"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 100px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -80,36 +49,74 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;호
+            &nbsp;&nbsp;호
           </td>
-          <th scope="row">차량번호</th>
+          <th scope="row">면적타입</th>
           <td>
+            <select
+              v-model="hAreaType"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">----전체----</option>
+              <option
+                v-for="model in items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">알림설정</th>
+          <td>
+            <select
+              v-model="hnSendFlag"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">----전체----</option>
+              <option value="Y">Y</option>
+              <option value="N">N</option>
+            </select>
+          </td>
+          <th scope="row">이사처리</th>
+          <td style="float: center">
             <input
-              type="text"
-              ref="authorInput"
-              v-model.trim="carNumber"
-              @keyup.enter="fnSearch"
+              type="checkbox"
+              v-model="moveOutDtime"
+              true-value="yes"
+              false-value=""
+              style="width: 30px"
+            /><!-- {{ moveOutDtime }} -->
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-bind:disabled="moveOutDtime == ''"
+              v-model.trim="moveOutDtimeStart"
+            />
+            ~
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-bind:disabled="moveOutDtime == ''"
+              v-model.trim="moveOutDtimeEnd"
             />
           </td>
         </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <colgroup>
-          <col style="width: 15%" />
-          <col style="width: *" />
-        </colgroup>
         <tr>
           <th scope="row">검색단위</th>
-          <td colspan="3">
+          <td>
             <input
               type="text"
+              style="width: 150px; text-align: center"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
             />
           </td>
+          <td></td>
+          <td></td>
         </tr>
       </tbody>
     </table>
@@ -119,52 +126,41 @@
       <button class="button blue" @click="fnSearch">검색</button>
       <button class="button" @click="fnList">취소</button>
     </div>
-    <!-- <div class="common-buttons">
-      <button
-        type="button"
-        class="w3-button w3-round w3-blue-gray"
-        v-on:click="fnSearch"
-      >
-        검색
-      </button> -->
   </div>
   <table class="w3-table-all">
     <colgroup>
-      <col style="width: 5%" />
-      <col style="width: 10%" />
       <col style="width: 10%" />
       <col style="width: 15%" />
       <col style="width: 15%" />
+      <col style="width: 15%" />
+      <col style="width: 15%" />
+      <col style="width: 15%" />
       <col style="width: *" />
-      <col style="width: *" />
-      <col style="width: 10%" />
     </colgroup>
     <thead>
       <tr>
-        <!-- <th>
-          <input type="checkbox" value="all" v-model="allSelected" />
-        </th> -->
         <th>No</th>
         <th>동</th>
         <th>호</th>
-        <th>차량번호</th>
-        <th>구분</th>
-        <th>출입시간</th>
+        <th>라인</th>
+        <th>면적타입</th>
+        <th>이사일자</th>
         <th>세대알림</th>
-        <th>통신결과</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(row, i) in list" :key="i">
-        <!-- <td><input type="checkbox" value="all" v-model="allSelected" /></td> -->
-        <td>{{ row.No }}</td>
+      <tr
+        v-for="(row, i) in list"
+        :key="i"
+        v-on:click="fnView(`${row.dongCode}`, `${row.hoCode}`)"
+      >
+        <td>{{ i + 1 }}</td>
         <td>{{ row.dongCode }}</td>
         <td>{{ row.hoCode }}</td>
-        <td>{{ row.carNumber }}</td>
-        <td>{{ row.inoutFlag }}</td>
-        <td>{{ row.inoutDtime }}</td>
-        <td>{{ row.sendTime }}</td>
-        <td>{{ row.sendResult }}</td>
+        <td>{{ row.lineCode }}</td>
+        <td>{{ row.hAreaType }}</td>
+        <td>{{ row.moveOutDtime }}</td>
+        <td>{{ row.hnSendFlag }}</td>
       </tr>
     </tbody>
   </table>
@@ -239,12 +235,15 @@ export default {
       }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
-      startTime: this.$route.query.startTime,
-      endTime: this.$route.query.endTime,
       dongCode: this.$route.query.dongCode,
       hoCode: this.$route.query.hoCode,
-      sendResult: this.$route.query.sendResult,
-      carNumber: this.$route.query.carNumber,
+      hAreaType: this.$route.query.hAreaType,
+      hnSendFlag: this.$route.query.hnSendFlag,
+      moveOutDtime: this.$route.query.moveOutDtime
+        ? this.$route.query.moveOutDtime
+        : "",
+      moveOutDtimeStart: this.$route.query.moveOutDtimeStart,
+      moveOutDtimeEnd: this.$route.query.moveOutDtimeEnd,
       dong_itmes: [],
       ho_items: [],
       items: [],
@@ -266,9 +265,50 @@ export default {
   },
   mounted() {
     this.fnGetDong();
+    this.fnGethArea();
     this.fnGetList();
   },
   methods: {
+    fnGetList() {
+      this.requestBody = {
+        // 데이터 전송
+        page: this.page,
+        size: this.size,
+        dongCode: this.dongCode,
+        hoCode: this.hoCode,
+        hAreaType: this.hAreaType,
+        hnSendFlag: this.hnSendFlag,
+        moveOutDtime: this.moveOutDtime,
+        moveOutDtimeStart: this.moveOutDtimeStart,
+        moveOutDtimeEnd: this.moveOutDtimeEnd,
+      };
+
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/list", {
+          params: this.requestBody,
+          headers: {},
+        })
+        .then((res) => {
+          //this.list = res.data; //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.
+          //alert(res.data.resultCode);
+          if (res.data.resultCode == "00") {
+            this.list = res.data.list;
+            this.paging = res.data.paging;
+            console.log("-----");
+            this.no =
+              this.paging.totalCount - (this.paging.page - 1) * this.paging.ipp;
+          } else {
+            alert("검색에 실패했습니다.(에러: " + res.data.resultCode + ")");
+          }
+        })
+        .catch((err) => {
+          if (err.message.indexOf("Network Error") > -1) {
+            alert("네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.");
+          } else {
+            alert(err.message);
+          }
+        });
+    },
     fnGetDong() {
       this.axios
         .get(this.$serverUrl + "/donghoInfo/dongList")
@@ -296,49 +336,22 @@ export default {
           console.log(err);
         });
     },
-    fnGetList() {
-      this.requestBody = {
-        // 데이터 전송
-        page: this.page,
-        size: this.size,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        dongCode: this.dongCode,
-        hoCode: this.hoCode,
-        sendResult: this.sendResult,
-        carNumber: this.carNumber,
-      };
-
+    fnGethArea() {
       this.axios
-        .get(this.$serverUrl + "/inoutCar/getCarIOList", {
-          params: this.requestBody,
-          headers: {},
-        })
+        .get(this.$serverUrl + "/donghoInfo/hAreaList")
         .then((res) => {
-          //this.list = res.data; //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.
-          //alert(res.data.resultCode);
-          if (res.data.resultCode == "00") {
-            this.list = res.data.list;
-            this.paging = res.data.paging;
-            console.log("-----");
-            this.no =
-              this.paging.totalCount - (this.paging.page - 1) * this.paging.ipp;
-          } else {
-            alert("검색에 실패했습니다.(에러: " + res.data.resultCode + ")");
-          }
+          this.items = res.data.items;
+          //alert(JSON.stringify(this.items));
         })
         .catch((err) => {
-          if (err.message.indexOf("Network Error") > -1) {
-            alert("네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.");
-          } else {
-            alert(err.message);
-          }
+          console.log(err);
         });
     },
-    fnView(idx) {
-      this.requestBody.idx = idx;
+    fnView(dongCode, hoCode) {
+      this.requestBody.dongCode = dongCode;
+      this.requestBody.hoCode = hoCode;
       this.$router.push({
-        path: "./detail",
+        path: "./donghoInfoUpdate",
         query: this.requestBody,
       });
     },
@@ -372,13 +385,11 @@ export default {
     fnList() {
       this.page = 1;
       this.size = 10;
-      this.startTime = "";
-      this.endTime = "";
-      this.inoutDtime = "";
-      this.dongCode = "";
-      this.hoCode = "";
-      this.sendResult = "";
-      this.carNumber = "";
+      this.hAreaType = "";
+      this.hnSendFlag = "";
+      this.moveOutDtime = "";
+      this.moveOutDtimeStart = "";
+      this.moveOutDtimeEnd = "";
 
       this.fnGetList();
     },

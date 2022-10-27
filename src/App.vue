@@ -3,8 +3,8 @@
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand">
-          <img alt="Vue logo" src="./assets/logo.png" style="height: 25px" />
-          Vue.js App
+          <img alt="Celtic logo" src="./assets/ci.png" style="height: 25px" />
+          <!-- Vue.js App -->
         </router-link>
         <button
           class="navbar-toggler"
@@ -20,9 +20,6 @@
         <div class="collapse navbar-collapse" id="navbarContent">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <router-link to="/" class="nav-link">Home</router-link>
-            </li>
-            <li class="nav-item">
               <router-link :to="{ name: 'BoardList' }" class="nav-link"
                 >Board</router-link
               >
@@ -30,6 +27,12 @@
             <li class="nav-item">
               <router-link to="/board/list" class="nav-link"
                 >sBoard</router-link
+              >
+            </li>
+            <!-- ------------------------------------------- 추가 코드 2 ----------------------------------------- -->
+            <li class="nav-item">
+              <router-link to="/donghoInfo/donghoInfolist" class="nav-link"
+                >동호정보</router-link
               >
             </li>
             <!-- ------------------------------------------- 추가 코드 ------------------------------------------- -->

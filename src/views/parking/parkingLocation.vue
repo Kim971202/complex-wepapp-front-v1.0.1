@@ -1,39 +1,86 @@
 <template>
   <div class="board">
     <h2>주차 위치</h2>
-
+    <table>
+      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
+    </table>
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: *" />
-        <col style="width: 15%" />
-        <col style="width: *" />
+        <col style="width: 35%" />
         <col style="width: 15%" />
         <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">시작일자</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="startTime" />
-          </td>
-          <th scope="row">종료일자</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="endTime" />
+          <th scope="row">조회기간</th>
+
+          <td style="float: center">
+            <!-- <input
+              type="checkbox"
+              v-model="moveOutDtime"
+              true-value="yes"
+              false-value=""
+              style="width: 30px"
+            /> -->
+            <!-- {{ moveOutDtime }} -->
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-bind:disabled="startTime == ''"
+              v-model.trim="startTime"
+            />
+            &emsp;~&emsp;
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-bind:disabled="endTime == ''"
+              v-model.trim="endTime"
+            />
           </td>
         </tr>
         <tr>
-          <th scope="row">동</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="dongCode" />
+          <th scope="row">세대정보</th>
+          <td style="float: center">
+            &emsp;&emsp;
+            <select
+              v-model="dongCode"
+              @change="onChange($event)"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in dong_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;동&nbsp;&nbsp;
+            <select
+              v-model="hoCode"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in ho_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;호
           </td>
-          <th scope="row">호</th>
+          <th scope="row">차량번호</th>
           <td>
-            <input type="text" ref="authorInput" v-model.trim="hoCode" />
-          </td>
-          <th scope="row">차량변호</th>
-          <td>
-            <input type="text" ref="authorInput" v-model.trim="hoCode" />
+            <input
+              type="text"
+              ref="authorInput"
+              v-model.trim="carNumber"
+              @keyup.enter="fnSearch"
+            />
           </td>
         </tr>
       </tbody>
@@ -187,11 +234,16 @@ export default {
       }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
+      startTime: this.$route.query.startTime,
+      endTime: this.$route.query.endTime,
       dongCode: this.$route.query.dongCode,
       hoCode: this.$route.query.hoCode,
       tagName: this.$route.query.tagName,
       parkingLocation: this.$route.query.parkingLocation,
       posUpdateDate: this.$route.query.posUpdateDate,
+      dong_itmes: [],
+      ho_items: [],
+      items: [],
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀
@@ -210,14 +262,44 @@ export default {
     };
   },
   mounted() {
+    this.fnGetDong();
     this.fnGetList();
   },
   methods: {
+    fnGetDong() {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/dongList")
+        .then((res) => {
+          this.dong_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    onChange(event) {
+      console.log("event =>" + event.target.value);
+      //alert(this.dongCode);
+      this.fnGetDongho(this.dongCode);
+    },
+    fnGetDongho(dongCode) {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/donghoList?dongCode=" + dongCode)
+        .then((res) => {
+          this.ho_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     fnGetList() {
       this.requestBody = {
         // 데이터 전송
         page: this.page,
         size: this.size,
+        startTime: this.startTime,
+        endTime: this.endTime,
         dongCode: this.dongCode,
         hoCode: this.hoCode,
         tagName: this.tagName,
@@ -288,6 +370,8 @@ export default {
     fnList() {
       this.page = 1;
       this.size = 10;
+      // this.startTime = "";
+      // this.endTime = "";
       this.dongCode = "";
       this.hoCode = "";
       this.tagName = "";
@@ -296,26 +380,6 @@ export default {
 
       this.fnGetList();
     },
-    // fnDelete() {
-    //   var result = confirm("삭제하시겠습니까?");
-    //   if (result) {
-    //     this.axios
-    //       .delete(this.$serverUrl + "/inoutCar/deleteCarIOList/" + this.idx, {})
-    //       .then((res) => {
-    //         console.log("res.data.resultCode: " + res.data.resultCode);
-    //         if (res.data.resultCode == "00") {
-    //           alert("삭제되었습니다.");
-    //           //alert(JSON.stringify(res.data.resultMsg));
-    //           this.fnList();
-    //         } else {
-    //           alert("삭제되지 않았습니다.");
-    //         }
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   }
-    // },
   },
 };
 </script>

@@ -10,43 +10,90 @@
         신규
       </button>
     </div>
-
+    <table>
+      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
+    </table>
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: *" />
-        <col style="width: 15%" />
-        <col style="width: *" />
+        <col style="width: 35%" />
         <col style="width: 15%" />
         <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">시작일자</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="startTime" />
-          </td>
-          <th scope="row">종료일자</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="endTime" />
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">동</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="dongCode" />
-          </td>
-          <th scope="row">호</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="hoCode" />
-          </td>
-          <th scope="row">수령여부</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="parcelStatus" />
+          <th scope="row">조회기간</th>
+
+          <td style="float: center">
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-model.trim="startTime"
+            />
+            &emsp;~&emsp;
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-model.trim="endTime"
+            />
           </td>
           <th scope="row">통신결과</th>
           <td>
-            <input type="text" ref="titleInput" v-model.trim="sendResult" />
+            <select
+              v-model="sendResult"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">----전체----</option>
+              <option value="성공">성공</option>
+              <option value="실패">실패</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">세대정보</th>
+          <td style="float: center">
+            &emsp;&emsp;
+            <select
+              v-model="dongCode"
+              @change="onChange($event)"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in dong_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;동&nbsp;&nbsp;
+            <select
+              v-model="hoCode"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in ho_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;호
+          </td>
+          <th scope="row">수령여부</th>
+          <td>
+            <select
+              v-model="parcelStatus"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">----전체----</option>
+              <option value="미수령">미수령</option>
+              <option value="수령">수령</option>
+              <option value="반품">반품</option>
+            </select>
           </td>
         </tr>
       </tbody>
@@ -74,12 +121,12 @@
   <div class="buttons">
     <div class="right">
       <button class="button blue" @click="fnSearch">검색</button>
-      <button class="w3-button w3-round w3-red" @click="fnDelete">삭제</button>
+      <!-- <button class="w3-button w3-round w3-red" @click="fnDelete">삭제</button> -->
       <button class="button" @click="fnList">취소</button>
     </div>
   </div>
   <!-- 체크박스 추가 -->
-  <div class="text-uppercase text-bold">id selected: {{ selected }}</div>
+  <!-- <div class="text-uppercase text-bold">id selected: {{ selected }}</div> -->
   <!-- ------------ -->
   <table class="w3-table-all">
     <colgroup>
@@ -95,10 +142,10 @@
     <thead>
       <tr>
         <!-- 체크박스 추가 -->
-        <label class="form-checkbox">
+        <!-- <label class="form-checkbox">
           <input type="checkbox" v-model="selectAll" @click="select" />
           <i class="form-icon"></i>
-        </label>
+        </label> -->
         <!-- ------------ -->
         <th>No</th>
         <th>동</th>
@@ -106,46 +153,37 @@
         <th>구분</th>
         <th>택배회사</th>
         <th>도착일시</th>
+        <th>수령여부</th>
         <th>수령일시</th>
         <th>통신결과</th>
       </tr>
     </thead>
 
     <tbody>
-      <!-- 체크박스 추가 -->
-      <tr class="table" v-for="(row, i) in list" :key="i">
+      <tr
+        class="table"
+        v-on:click="fnView(`${row.idx}`)"
+        v-for="(row, i) in list"
+        :key="i"
+      >
+        <!-- 체크박스 추가 -->
+        <!-- <tr class="table" v-for="(row, i) in list" :key="i">
         <td>
           <label class="form-checkbox">
             <input type="checkbox" :value="row.idx" v-model="selected" />
             <i class="form-icon"></i>
           </label>
-        </td>
+        </td> -->
         <!-- --------------------------------------------------------------------------- -->
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.No }}</a>
-        </td>
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.dongCode }}</a>
-        </td>
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.hoCode }}</a>
-        </td>
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.parcelFlag }}</a>
-        </td>
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.parcelCorp }}</a>
-        </td>
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.receiveTime }}</a>
-        </td>
-        <!-- <td>{{ row.parcelStatus }}</td> -->
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.posUpdateDate }}</a>
-        </td>
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.sendResult }}</a>
-        </td>
+        <td>{{ row.No }}</td>
+        <td>{{ row.dongCode }}</td>
+        <td>{{ row.hoCode }}</td>
+        <td>{{ row.parcelFlag }}</td>
+        <td>{{ row.parcelCorp }}</td>
+        <td>{{ row.arrivalTime }}</td>
+        <td>{{ row.parcelStatus }}</td>
+        <td>{{ row.receiveTime }}</td>
+        <td>{{ row.sendResult }}</td>
       </tr>
     </tbody>
   </table>
@@ -224,13 +262,15 @@ export default {
       }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
+      startTime: this.$route.query.startTime,
+      endTime: this.$route.query.endTime,
       dongCode: this.$route.query.dongCode,
       hoCode: this.$route.query.hoCode,
-      parcelFlag: this.$route.query.parcelFlag,
-      parcelCorp: this.$route.query.parcelCorp,
       parcelStatus: this.$route.query.parcelStatus,
-      posUpdateDate: this.$route.query.posUpdateDate,
       sendResult: this.$route.query.sendResult,
+      dong_itmes: [],
+      ho_items: [],
+      items: [],
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀
@@ -249,31 +289,47 @@ export default {
     };
   },
   mounted() {
+    this.fnGetDong();
     this.fnGetList();
   },
   methods: {
-    /** 체크박스 추가 */
-    select() {
-      this.selected = [];
-      if (!this.selectAll) {
-        for (let i in this.list) {
-          this.selected.push(this.list[i].idx);
-        }
-      }
+    fnGetDong() {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/dongList")
+        .then((res) => {
+          this.dong_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    /************** */
-
+    onChange(event) {
+      console.log("event =>" + event.target.value);
+      //alert(this.dongCode);
+      this.fnGetDongho(this.dongCode);
+    },
+    fnGetDongho(dongCode) {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/donghoList?dongCode=" + dongCode)
+        .then((res) => {
+          this.ho_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     fnGetList() {
       this.requestBody = {
         // 데이터 전송
         page: this.page,
         size: this.size,
+        startTime: this.startTime,
+        endTime: this.endTime,
         dongCode: this.dongCode,
         hoCode: this.hoCode,
-        parcelFlag: this.parcelFlag,
-        parcelCorp: this.parcelCorp,
         parcelStatus: this.parcelStatus,
-        posUpdateDate: this.posUpdateDate,
         sendResult: this.sendResult,
       };
 
@@ -340,45 +396,14 @@ export default {
     fnList() {
       this.page = 1;
       this.size = 10;
+      this.startTime = "";
+      this.endTime = "";
       this.dongCode = "";
       this.hoCode = "";
-      this.parcelFlag = "";
-      this.parcelCorp = "";
       this.parcelStatus = "";
-      this.posUpdateDate = "";
       this.sendResult = "";
 
       this.fnGetList();
-    },
-
-    fnDelete() {
-      var result = confirm("삭제하시겠습니까?");
-      console.log("this.selected.length: " + this.selected.length);
-      for (let i = 0; i < this.selected.length; ++i) {
-        // this.selected.push(this.list[i].idx);
-        if (result) {
-          this.axios
-            .delete(
-              this.$serverUrl +
-                "/complaint/deleteApplication/" +
-                this.list[i].idx,
-              {}
-            )
-            .then((res) => {
-              console.log("res.data.resultCode: " + res.data.resultCode);
-              if (res.data.resultCode == "00") {
-                alert("삭제되었습니다.");
-                //alert(JSON.stringify(res.data.resultMsg));
-                this.fnList();
-              } else {
-                alert("삭제되지 않았습니다.");
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      }
     },
   },
 };

@@ -86,6 +86,19 @@ const routes = [
 
   /************************************************************************************************************** */
   {
+    path: "/donghoInfo/donghoInfoList",
+    name: "donghoInfoList",
+    component: () => import("../views/donghoInfo/donghoInfoList.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/donghoInfo/donghoInfoUpdate",
+    name: "donghoInfoUpdate",
+    component: () => import("../views/donghoInfo/donghoInfoUpdate.vue"),
+    meta: { requireLogin: true },
+  },
+  /************************************************************************************************************** */
+  {
     path: "/inoutCar/inoutCarList",
     name: "inoutCarList",
     component: () => import("../views/inoutCar/inoutCarList.vue"),
