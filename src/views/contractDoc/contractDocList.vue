@@ -14,17 +14,25 @@
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: *" />
+        <col style="width: 35%" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">시작일자</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="startDate" />
-          </td>
-          <th scope="row">종료일자</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="endDate" />
+          <th scope="row">조회기간</th>
+          <td style="float: left">
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-bind:disabled="startDate == ''"
+              v-model.trim="startDate"
+            />
+            &emsp;~&emsp;
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-bind:disabled="endDate == ''"
+              v-model.trim="endDate"
+            />
           </td>
         </tr>
         <tr>
@@ -64,28 +72,22 @@
     <div class="right">
       <button class="button blue" @click="fnSearch">검색</button>
       <!-- <button class="w3-button w3-round w3-red" @click="fnDelete">삭제</button> -->
-      <!-- <button class="button" @click="fnList">취소</button> -->
+      <button class="button" @click="fnList">취소</button>
     </div>
   </div>
   <!-- 체크박스 추가 -->
-  <div class="text-uppercase text-bold">id selected: {{ selected }}</div>
+  <!-- <div class="text-uppercase text-bold">id selected: {{ selected }}</div> -->
   <!-- ------------ -->
   <table class="w3-table-all">
     <colgroup>
       <col style="width: 5%" />
-      <col style="width: 20%" />
-      <col style="width: 40%" />
-      <col style="width: 20%" />
+      <!-- <col style="width: 40%" /> -->
       <col style="width: *" />
+      <col style="width: 20%" />
+      <col style="width: 10" />
     </colgroup>
     <thead>
       <tr>
-        <!-- 체크박스 추가 -->
-        <label class="form-checkbox">
-          <input type="checkbox" v-model="selectAll" @click="select" />
-          <i class="form-icon"></i>
-        </label>
-        <!-- ------------ -->
         <th>No</th>
         <th>계약명</th>
         <th>등록자</th>
@@ -94,27 +96,16 @@
     </thead>
 
     <tbody>
-      <!-- 체크박스 추가 -->
-      <tr class="table" v-for="(row, i) in list" :key="i">
-        <td>
-          <label class="form-checkbox">
-            <input type="checkbox" :value="row.idx" v-model="selected" />
-            <i class="form-icon"></i>
-          </label>
-        </td>
-        <!-- --------------------------------------------------------------------------- -->
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.No }}</a>
-        </td>
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.contractTitle }}</a>
-        </td>
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.userId }}</a>
-        </td>
-        <td>
-          <a v-on:click="fnView(`${row.idx}`)">{{ row.contractDate }}</a>
-        </td>
+      <tr
+        class="table"
+        v-on:click="fnView(`${row.idx}`)"
+        v-for="(row, i) in list"
+        :key="i"
+      >
+        <td>{{ row.No }}</td>
+        <td>{{ row.contractTitle }}</td>
+        <td>{{ row.userId }}</td>
+        <td>{{ row.contractDate }}</td>
       </tr>
     </tbody>
   </table>
@@ -196,6 +187,9 @@ export default {
       contractTitle: this.$route.query.contractTitle,
       userId: this.$route.query.userId,
       contractDate: this.$route.query.contractDate,
+      dong_itmes: [],
+      ho_items: [],
+      items: [],
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀
@@ -214,20 +208,37 @@ export default {
     };
   },
   mounted() {
+    this.fnGetDong();
     this.fnGetList();
   },
   methods: {
-    /** 체크박스 추가 */
-    select() {
-      this.selected = [];
-      if (!this.selectAll) {
-        for (let i in this.list) {
-          this.selected.push(this.list[i].idx);
-        }
-      }
+    fnGetDong() {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/dongList")
+        .then((res) => {
+          this.dong_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    /************** */
-
+    onChange(event) {
+      console.log("event =>" + event.target.value);
+      //alert(this.dongCode);
+      this.fnGetDongho(this.dongCode);
+    },
+    fnGetDongho(dongCode) {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/donghoList?dongCode=" + dongCode)
+        .then((res) => {
+          this.ho_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     fnGetList() {
       this.requestBody = {
         // 데이터 전송
@@ -307,36 +318,6 @@ export default {
 
       this.fnGetList();
     },
-
-    // fnDelete() {
-    //   var result = confirm("삭제하시겠습니까?");
-    //   console.log("this.selected.length: " + this.selected.length);
-    //   for (let i = 0; i < this.selected.length; ++i) {
-    //     // this.selected.push(this.list[i].idx);
-    //     if (result) {
-    //       this.axios
-    //         .delete(
-    //           this.$serverUrl +
-    //             "/contractDoc/deletecontractDoc/" +
-    //             this.list[i].idx,
-    //           {}
-    //         )
-    //         .then((res) => {
-    //           console.log("res.data.resultCode: " + res.data.resultCode);
-    //           if (res.data.resultCode == "00") {
-    //             alert("삭제되었습니다.");
-    //             //alert(JSON.stringify(res.data.resultMsg));
-    //             this.fnList();
-    //           } else {
-    //             alert("삭제되지 않았습니다.");
-    //           }
-    //         })
-    //         .catch((err) => {
-    //           console.log(err);
-    //         });
-    //     }
-    //   }
-    // },
   },
 };
 </script>

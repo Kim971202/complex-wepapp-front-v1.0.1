@@ -38,12 +38,16 @@
         <tr>
           <th scope="row">진행상태</th>
           <td>
-            <textarea
-              rows="1"
-              placeholder="민원 상태를 입력 하세요.(취소/신청/접수/완료)"
-              ref="progressStatusTextarea"
-              v-model.trim="progressStatus"
-            ></textarea>
+            <select
+              style="width: 50%; text-align: center"
+              v-model="progressStatus"
+              ref="progressStatusInput"
+            >
+              <option value="취소">취소</option>
+              <option value="신청">신청</option>
+              <option value="접수">접수</option>
+              <option value="완료">완료</option>
+            </select>
           </td>
         </tr>
         <tr>

@@ -31,6 +31,10 @@
               v-model.trim="contractFlag"
             />
           </td>
+          <!-- to do list : 각 구분별 버튼으로 수정 -->
+          <td>
+            <button class="button" @click="fnSearch">검색</button>
+          </td>
         </tr>
       </tbody>
     </table>

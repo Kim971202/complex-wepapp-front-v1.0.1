@@ -10,39 +10,82 @@
         신규
       </button>
     </div> -->
-
+    <table>
+      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
+    </table>
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: *" />
-        <col style="width: 15%" />
-        <col style="width: *" />
+        <col style="width: 35%" />
         <col style="width: 15%" />
         <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">시작일자</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="startTime" />
+          <th scope="row">조회기간</th>
+
+          <td style="float: center">
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-model.trim="startTime"
+            />
+            &emsp;~&emsp;
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-model.trim="endTime"
+            />
           </td>
-          <th scope="row">종료일자</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="endTime" />
-          </td>
+          <td></td>
+          <td></td>
         </tr>
         <tr>
-          <th scope="row">동</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="dongCode" />
-          </td>
-          <th scope="row">호</th>
-          <td>
-            <input type="text" ref="titleInput" v-model.trim="hoCode" />
+          <th scope="row">세대정보</th>
+          <td style="float: center">
+            &emsp;&emsp;
+            <select
+              v-model="dongCode"
+              @change="onChange($event)"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in dong_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;동&nbsp;&nbsp;
+            <select
+              v-model="hoCode"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in ho_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;호
           </td>
           <th scope="row">진행단계</th>
           <td>
-            <input type="text" ref="titleInput" v-model.trim="progressStatus" />
+            <select
+              v-model="progressStatus"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">----전체----</option>
+              <option value="취소">취소</option>
+              <option value="신청">신청</option>
+              <option value="접수">접수</option>
+              <option value="완료">완료</option>
+            </select>
           </td>
         </tr>
       </tbody>
@@ -88,7 +131,6 @@
       <col style="width: 10%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
-      <!-- <col style="width: 5%" /> -->
       <col style="width: *" />
       <col style="width: *" />
       <col style="width: 10%" />
@@ -96,7 +138,6 @@
     <thead>
       <tr>
         <th>No</th>
-        <!-- <th>민원제목</th> -->
         <th>신청일자</th>
         <th>동</th>
         <th>호</th>
@@ -214,6 +255,9 @@ export default {
       appReceiptDate: this.$route.query.appReceiptDate,
       appCompleteDate: this.$route.query.appCompleteDate,
       progressStatus: this.$route.query.progressStatus,
+      dong_itmes: [],
+      ho_items: [],
+      items: [],
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀
@@ -232,9 +276,37 @@ export default {
     };
   },
   mounted() {
+    this.fnGetDong();
     this.fnGetList();
   },
   methods: {
+    fnGetDong() {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/dongList")
+        .then((res) => {
+          this.dong_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    onChange(event) {
+      console.log("event =>" + event.target.value);
+      //alert(this.dongCode);
+      this.fnGetDongho(this.dongCode);
+    },
+    fnGetDongho(dongCode) {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/donghoList?dongCode=" + dongCode)
+        .then((res) => {
+          this.ho_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     fnGetList() {
       this.requestBody = {
         // 데이터 전송

@@ -8,7 +8,7 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">구 분</th>
+          <th scope="row">구&nbsp;&nbsp;&nbsp;&nbsp;분</th>
           <td>
             <input
               type="text"
@@ -41,7 +41,7 @@
           </td>
         </tr>
         <tr>
-          <th scope="row">내 용</th>
+          <th scope="row">내&nbsp;&nbsp;&nbsp;&nbsp;용</th>
           <td>
             <input
               type="text"
