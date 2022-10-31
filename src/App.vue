@@ -23,8 +23,8 @@
               <router-link :to="{ name: 'BoardList' }" class="nav-link"
                 >Board</router-link
               >
-            </li>
-            <li class="nav-item">
+            </li> -->
+            <!-- <li class="nav-item">
               <router-link to="/board/list" class="nav-link"
                 >sBoard</router-link
               >
@@ -36,6 +36,11 @@
               >
             </li>
             <!-- ------------------------------------------- 추가 코드 ------------------------------------------- -->
+            <li class="nav-item">
+              <router-link to="/notice/noticeList" class="nav-link"
+                >공지사항</router-link
+              >
+            </li>
             <li class="nav-item">
               <router-link to="/inoutCar/inoutCarList" class="nav-link"
                 >입출차정보</router-link

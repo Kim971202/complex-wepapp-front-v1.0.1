@@ -51,15 +51,16 @@
               <div class="col-sm-12 col-md-6 text-md-start">
                 <div class="py-5">
                   <h1 class="text-white fw-bold">
-                    Welcome to Your <br />Vue.JS Application
+                    방문 차량 사전 예약 후 <br />경비원 통제 없이 입차하세요
                   </h1>
                   <p class="text-white mb-4 fs-5">
-                    당신의 이야기가 세상을 바꿉니다.
+                    방문 차량 예약일은 하루입니다.
                   </p>
+
                   <router-link
-                    :to="{ name: 'BoardWrite' }"
+                    :to="{ name: 'visitCarInsert' }"
                     class="btn btn-success"
-                    >나의 이야기 쓰기</router-link
+                    >방문차량 등록</router-link
                   >
                 </div>
               </div>
@@ -85,20 +86,20 @@
               <div class="col-sm-12 col-md-6 text-md-start">
                 <div class="py-5">
                   <h1 class="text-white fw-bold">
-                    반려동물과의 <br />희로애락(喜怒哀樂)
+                    다양한 업무를 <br />통합/관리하세요.
                   </h1>
                   <p class="text-white mb-4 fs-5">
-                    나의 반려생활을 공유합니다.
+                    민원업무, 택배업무 등 모든 업무를 관리할 수 있습니다.
                   </p>
                   <router-link
-                    :to="{ name: 'BoardList' }"
+                    :to="{ name: 'complaintList' }"
                     class="btn btn-primary mx-2"
-                    >반려생활 소식</router-link
+                    >민원관리</router-link
                   >
                   <router-link
-                    :to="{ name: 'BoardWrite' }"
+                    :to="{ name: 'parcelInsert' }"
                     class="btn btn-success"
-                    >나의 반려생활 쓰기</router-link
+                    >택배등록</router-link
                   >
                 </div>
               </div>
@@ -126,7 +127,9 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
-  <!-- <div class="py-5">
+
+  <!-- 
+  <div class="py-5">
     <div class="container text-start">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
         <div
@@ -158,7 +161,8 @@
       </div>
     </div>
   </div> -->
-  <div class="py-5">
+
+  <!-- <div class="py-5">
     <div class="container text-start">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
         <div
@@ -209,10 +213,11 @@
         </button>
       </div>
     </div>
-  </div>
+  </div> -->
+
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <img alt="daesung ci" src="../assets/ci.png" />
+    <HelloWorld msg="DAESUNG CELTIC ENERSYS" />
   </div>
 </template>
 
@@ -289,12 +294,20 @@ export default {
           console.log(err);
         });
     },
+    // boardNoClick(boardItem) {
+    //   this.$router.push({
+    //     name: "BoardView",
+    //     query: { boardNo: boardItem.no },
+    //   });
+    // },
+
     boardNoClick(boardItem) {
       this.$router.push({
         name: "BoardView",
         query: { boardNo: boardItem.no },
       });
     },
+
     boardPaging() {
       if (
         this.boardPagination != undefined &&
