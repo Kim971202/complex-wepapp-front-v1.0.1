@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h1>계약자료</h1>
+    <h1>계약자료 등록</h1>
     <table>
       <colgroup>
         <col style="width: 18.5%" />
@@ -8,40 +8,29 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">제 목</th>
-          <td>
+          <th scope="row">제&nbsp;&nbsp;&nbsp;목</th>
+          <td colspan="1">
             <textarea
               rows="1"
-              placeholder="제목을 입력하세요"
-              ref="contractTitleInput"
+              placeholder="계약명을 입력하세요."
+              ref="contractTitleTextarea"
               v-model.trim="contractTitle"
             ></textarea>
           </td>
         </tr>
         <tr>
           <th scope="row">계약일자</th>
-          <td>
+          <td style="float: center">
             <input
               type="date"
               style="width: 150px; text-align: center"
-              placeholder="계약일자를 입력하세요."
-              ref="contractDateInput"
               v-model.trim="contractDate"
             />
           </td>
         </tr>
-      </tbody>
-    </table>
-    <br />
-    <table>
-      <colgroup>
-        <col style="width: 18.5%" />
-        <col style="width: auto" />
-      </colgroup>
-      <tbody>
         <tr>
-          <th scope="row">내 용</th>
-          <td>
+          <th scope="row">내&nbsp;&nbsp;&nbsp;용</th>
+          <td colspan="10">
             <textarea
               rows="10"
               placeholder="내용을 입력하세요"
@@ -49,6 +38,10 @@
               v-model.trim="contractContent"
             ></textarea>
           </td>
+        </tr>
+        <tr>
+          <input type="file" @change="onFileSelected" />
+          <button @click="onUpload">Upload</button>
         </tr>
       </tbody>
     </table>
@@ -59,7 +52,7 @@
         class="w3-button w3-round w3-blue-gray"
         v-on:click="fnSave"
       >
-        저장</button
+        등록</button
       >&nbsp;
       <button
         type="button"
@@ -78,41 +71,19 @@ export default {
     //변수생성
     return {
       requestBody: this.$route.query,
-      idx: this.$route.query.idx,
+      id: "",
       contractTitle: "",
       contractDate: "",
       contractContent: "",
-      filePath: "",
-      fileName: "",
+      items: [],
     };
   },
-  mounted() {
-    this.fnGetView();
-  },
+
+  //   mounted() {
+  //     this.fnGetList();
+  //   },
+
   methods: {
-    fnGetView() {
-      if (this.idx !== undefined) {
-        this.axios
-          .get(
-            this.$serverUrl +
-              "/contractDoc/getDetailedContractDocList/" +
-              this.idx,
-            {
-              params: this.requestBody,
-            }
-          )
-          .then((res) => {
-            this.contractTitle = res.data.contractTitle;
-            this.contractDate = res.data.contractDate;
-            this.contractContent = res.data.contractContent;
-            this.filePath = res.data.filePath;
-            this.fileName = res.data.fileName;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    },
     fnList() {
       delete this.requestBody.idx;
       this.$router.push({
@@ -120,54 +91,41 @@ export default {
         query: this.requestBody,
       });
     },
-    fnView(idx) {
-      this.requestBody.idx = idx;
-      this.$router.push({
-        path: "./contractDocListDetail",
-        query: this.requestBody,
-      });
-    },
     fnSave() {
-      if (this.resvFlag == "") {
-        alert("제목을 입력하세요.");
-        this.$refs.contractTitleTextArea.focus();
+      if (this.contractTitle == "") {
+        alert("제목을 입력하세요");
+        this.$refs.contractTitleInput.focus();
         return;
-      }
-      if (this.resvFlag == "") {
-        alert("계약일자를 입력하세요.");
-        this.$refs.contractDateTextArea.focus();
+      } else if (this.contractDate == "") {
+        alert("계약일을 입력하세요.");
+        this.$refs.contractDateInput.focus();
         return;
-      }
-      if (this.resvFlag == "") {
+      } else if (this.contractContent == "") {
         alert("내용을 입력하세요.");
-        this.$refs.contractContentTextArea.focus();
+        this.$refs.contractContentInput.focus();
         return;
       }
-
-      let apiUrl =
-        this.$serverUrl + "/contractDoc/updateContractDoc/" + this.idx;
+      let apiUrl = this.$serverUrl + "/contractDoc/uploadContract";
       this.form = {
-        idx: this.idx,
         contractTitle: this.contractTitle,
         contractDate: this.contractDate,
         contractContent: this.contractContent,
-        filePath: this.filePath,
-        fileName: this.fileName,
       };
 
-      var result = confirm("수정하시겠습니까?");
+      var result = confirm("등록하시겠습니까?");
+
       if (result) {
-        //UPDATE
+        //INSERT
         this.axios
-          .patch(apiUrl, this.form)
+          .post(apiUrl, this.form)
           .then((res) => {
             console.log("res.data.resultCode: " + res.data.resultCode);
             if (res.data.resultCode == "00") {
-              alert("수정되었습니다.");
+              alert("등록이 완료되었습니다.");
               //alert(JSON.stringify(res.data.resultMsg));
-              this.fnView(res.data.idx);
+              this.fnList();
             } else {
-              alert("수정되지 않았습니다.");
+              alert("등록이 완료되지 않았습니다.");
             }
           })
           .catch((err) => {

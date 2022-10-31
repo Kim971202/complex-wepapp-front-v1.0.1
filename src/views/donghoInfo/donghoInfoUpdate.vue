@@ -68,8 +68,9 @@
         class="w3-button w3-round w3-blue-gray"
         v-on:click="fnSave"
       >
-        수정</button
-      >&nbsp;
+        수정
+      </button>
+      &nbsp;
       <button
         type="button"
         class="w3-button w3-round w3-gray"
@@ -146,7 +147,7 @@ export default {
       delete this.requestBody.dongCode;
       delete this.requestBody.hoCode;
       this.$router.push({
-        path: "./list",
+        path: "./donghoInfoList",
         query: this.requestBody,
       });
     },
@@ -155,7 +156,7 @@ export default {
       this.requestBody.hoCode = hoCode;
       this.$router.push({
         // path: "./detail",
-        path: "./update",
+        path: "./donghoInfoUpdate",
         query: this.requestBody,
       });
     },

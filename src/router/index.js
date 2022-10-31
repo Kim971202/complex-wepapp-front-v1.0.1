@@ -228,6 +228,12 @@ const routes = [
     component: () => import("../views/contractDoc/contractDocUpdate.vue"),
     meta: { requireLogin: true },
   },
+  {
+    path: "/contractDoc/contractDocInsert",
+    name: "contractDocInsert",
+    component: () => import("../views/contractDoc/contractDocInsert.vue"),
+    meta: { requireLogin: true },
+  },
   /************************************************************************************************************** */
 ];
 

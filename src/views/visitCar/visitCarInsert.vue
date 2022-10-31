@@ -9,41 +9,58 @@
       <tbody>
         <tr>
           <th scope="row">방문일</th>
-          <td>
+          <td style="float: center">
             <input
-              type="text"
-              placeholder="방문일시를 입력하세요"
-              ref="visitDateInput"
+              type="date"
+              style="width: 150px; text-align: center"
               v-model.trim="visitDate"
             />
           </td>
         </tr>
+        <!-- 방문일 선택해야 동호가 표시되는 버그 -->
         <tr>
-          <th scope="row">방문일</th>
+          <th scope="row">세대정보</th>
+          <td style="float: center">
+            <select
+              v-model="dongCode"
+              ref="dongCodeInput"
+              @change="onChange($event)"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---선택하세요---</option>
+              <!-- <option value="undefined">-선택하세요-</option> -->
+              <option
+                v-for="model in dong_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;동&nbsp;&nbsp;
+            <select
+              v-model="hoCode"
+              ref="hoCodeInput"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---선택하세요---</option>
+              <option
+                v-for="model in ho_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            &emsp;호
+          </td>
+        </tr>
+
+        <tr>
+          <th scope="row">방문기간</th>
           <td>1일</td>
         </tr>
-        <tr>
-          <th scope="row">동</th>
-          <td>
-            <input
-              type="text"
-              placeholder="동 입력"
-              ref="dongCodeInput"
-              v-model.trim="dongCode"
-            />
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">호</th>
-          <td>
-            <input
-              type="text"
-              placeholder="호 입력"
-              ref="hoCodeInput"
-              v-model.trim="hoCode"
-            />
-          </td>
-        </tr>
+
         <tr>
           <th scope="row">차량번호</th>
           <td>
@@ -52,31 +69,10 @@
               placeholder="방문할 차량번호를 입력하세요."
               ref="carNumberInput"
               v-model.trim="carNumber"
+              @keyup.enter="fnSave"
             />
           </td>
         </tr>
-        <!-- <tr>
-          <th scope="row">수령여부</th>
-          <td>
-            <input
-              type="text"
-              placeholder="제목을 입력하세요."
-              ref="titleInput"
-              v-model.trim="title"
-            />
-          </td>
-        </tr> -->
-        <!-- <tr>
-          <th scope="row">내용</th>
-          <td>
-            <textarea
-              rows="10"
-              placeholder="내용을 입력하세요."
-              ref="contentsTextarea"
-              v-model.trim="contents"
-            ></textarea>
-          </td>
-        </tr> -->
       </tbody>
     </table>
 
@@ -106,16 +102,50 @@ export default {
     return {
       requestBody: this.$route.query,
       id: "",
-      visitDate: "",
-      visitperiod: "",
       dongCode: "",
       hoCode: "",
+      visitDate: "",
+      visitperiod: "",
       carNumber: "",
-      //   author: this.$store.state.loginStore.memberId,
+      dong_itmes: [],
+      ho_items: [],
+      items: [],
     };
   },
 
+  mounted() {
+    this.fnGetDong();
+  },
+
   methods: {
+    fnGetDong() {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/dongList")
+        .then((res) => {
+          this.dong_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    onChange(event) {
+      console.log("event =>" + event.target.value);
+      //alert(this.dongCode);
+      this.fnGetDongho(this.dongCode);
+    },
+    fnGetDongho(dongCode) {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/donghoList?dongCode=" + dongCode)
+        .then((res) => {
+          this.ho_items = res.data.items;
+          //alert(JSON.stringify(this.items));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
     fnList() {
       delete this.requestBody.idx;
       this.$router.push({
@@ -144,9 +174,9 @@ export default {
 
       let apiUrl = this.$serverUrl + "/visitCar/uploadParkingResv";
       this.form = {
-        visitDate: this.visitDate,
         dongCode: this.dongCode,
         hoCode: this.hoCode,
+        visitDate: this.visitDate,
         carNumber: this.carNumber,
       };
 

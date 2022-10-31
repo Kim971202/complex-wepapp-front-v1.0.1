@@ -8,7 +8,7 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">제 목</th>
+          <th scope="row">제&nbsp;&nbsp;&nbsp;목</th>
           <td>{{ contractTitle }}</td>
         </tr>
         <tr>
@@ -25,7 +25,7 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">내 용</th>
+          <th scope="row">내&nbsp;&nbsp;&nbsp;용</th>
           <td>{{ contractContent }}</td>
         </tr>
       </tbody>

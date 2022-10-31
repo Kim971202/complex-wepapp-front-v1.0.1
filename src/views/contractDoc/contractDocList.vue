@@ -167,10 +167,6 @@ export default {
   data() {
     //변수생성
     return {
-      /** 체크박스 추가 */
-      selected: [],
-      selectAll: false,
-      /************** */
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: "", //게시판 숫자처리
@@ -187,8 +183,6 @@ export default {
       contractTitle: this.$route.query.contractTitle,
       userId: this.$route.query.userId,
       contractDate: this.$route.query.contractDate,
-      dong_itmes: [],
-      ho_items: [],
       items: [],
 
       paginavigation: function () {
@@ -208,42 +202,16 @@ export default {
     };
   },
   mounted() {
-    this.fnGetDong();
     this.fnGetList();
   },
   methods: {
-    fnGetDong() {
-      this.axios
-        .get(this.$serverUrl + "/donghoInfo/dongList")
-        .then((res) => {
-          this.dong_items = res.data.items;
-          //alert(JSON.stringify(this.items));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    onChange(event) {
-      console.log("event =>" + event.target.value);
-      //alert(this.dongCode);
-      this.fnGetDongho(this.dongCode);
-    },
-    fnGetDongho(dongCode) {
-      this.axios
-        .get(this.$serverUrl + "/donghoInfo/donghoList?dongCode=" + dongCode)
-        .then((res) => {
-          this.ho_items = res.data.items;
-          //alert(JSON.stringify(this.items));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     fnGetList() {
       this.requestBody = {
         // 데이터 전송
         page: this.page,
         size: this.size,
+        startDate: this.startDate,
+        endDate: this.endDate,
         contractTitle: this.contractTitle,
         userId: this.userId,
         contractDate: this.contractDate,
