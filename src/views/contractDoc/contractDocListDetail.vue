@@ -28,6 +28,19 @@
           <th scope="row">내&nbsp;&nbsp;&nbsp;용</th>
           <td>{{ contractContent }}</td>
         </tr>
+        <tr>
+          <th scope="row">첨부파일</th>
+          <td>
+            {{ fileName }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button
+              type="button"
+              class="w3-button w3-round w3-blue-gray"
+              @click="fnDownloadFile"
+            >
+              다운로드</button
+            >&nbsp;
+          </td>
+        </tr>
       </tbody>
     </table>
 
@@ -112,6 +125,23 @@ export default {
         path: "./contractDocUpdate",
         query: this.requestBody,
       });
+    },
+    fnDownloadFile() {
+      const FileDownload = require("js-file-download");
+      this.axios
+        .get(
+          this.$serverUrl + "/fileUpload/download?fileName=" + this.fileName,
+          { responseType: "blob" }
+        )
+        .then((res) => {
+          alert("성공적으로 다운로드 하였습니다.");
+          FileDownload(res.data, this.fileName);
+          console.log(res);
+        })
+        .catch((err) => {
+          alert("현제 접속자가 많아 잠시후에 시도하십시오");
+          console.log(err);
+        });
     },
     fnDelete() {
       var result = confirm("삭제하시겠습니까?");

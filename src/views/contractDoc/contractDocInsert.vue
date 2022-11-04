@@ -40,8 +40,12 @@
           </td>
         </tr>
         <tr>
-          <input type="file" @change="onFileSelected" />
-          <button @click="onUpload">Upload</button>
+          <input
+            type="file"
+            @change="onFileChange"
+            charset="UTF-8"
+            id="images"
+          />
         </tr>
       </tbody>
     </table>
@@ -75,6 +79,7 @@ export default {
       contractTitle: "",
       contractDate: "",
       contractContent: "",
+      file: "",
       items: [],
     };
   },
@@ -90,6 +95,41 @@ export default {
         path: "./contractDocList",
         query: this.requestBody,
       });
+    },
+    onFileChange(event) {
+      this.selectedFile = event.target.files[0];
+      if (this.selectedFile != null) {
+        this.onUpload();
+      }
+    },
+    onUpload() {
+      const fd = new FormData();
+      fd.append("file", this.selectedFile, this.selectedFile.name);
+      console.log(fd);
+      this.axios
+        .post(this.$serverUrl + "/fileUpload/file", fd, {
+          responseType: "blob",
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    fnFileUpload() {
+      this.axios
+        .post(this.$serverUrl + "/fileUpload/file", this.file)
+        .then((res) => {
+          if (!res.data.file) {
+            alert("등록되었습니다.");
+          } else {
+            alert("등록되지 않았습니다.");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     fnSave() {
       if (this.contractTitle == "") {
@@ -140,4 +180,29 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+input[type="file"] {
+  width: 350px;
+  max-width: 100%;
+  color: #444;
+  padding: 5px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #555;
+}
+
+input[type="file"]::file-selector-button {
+  margin-right: 20px;
+  border: none;
+  background: #084cdf;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #0d45a5;
+}
+</style>

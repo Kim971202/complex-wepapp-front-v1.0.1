@@ -1,5 +1,6 @@
 <template>
   <header>
+    <meta charset="utf-8" />
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand">
@@ -24,11 +25,11 @@
                 >Board</router-link
               >
             </li> -->
-            <!-- <li class="nav-item">
+            <li class="nav-item">
               <router-link to="/board/list" class="nav-link"
                 >sBoard</router-link
               >
-            </li> -->
+            </li>
             <!-- ------------------------------------------- 추가 코드 2 ----------------------------------------- -->
             <li class="nav-item">
               <router-link to="/donghoInfo/donghoInfolist" class="nav-link"

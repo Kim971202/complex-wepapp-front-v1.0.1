@@ -102,7 +102,7 @@
         </colgroup>
         <tr>
           <th scope="row">검색단위</th>
-          <td colspan="3">
+          <td>
             <input
               type="text"
               ref="sizeInput"
@@ -128,8 +128,14 @@
         검색
       </button> -->
   </div>
-  <table class="w3-table-all">
-    <colgroup>
+  <!-- <table class="w3-table-all"> -->
+  <table
+    class="table table-bordered"
+    id="dataTable"
+    width="100%"
+    cellspacing="0"
+  >
+    <!-- <colgroup>
       <col style="width: 5%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
@@ -138,7 +144,7 @@
       <col style="width: *" />
       <col style="width: *" />
       <col style="width: 10%" />
-    </colgroup>
+    </colgroup> -->
     <thead>
       <tr>
         <!-- <th>
@@ -226,6 +232,8 @@ export default {
   data() {
     //변수생성
     return {
+      selected: [],
+      selectAll: false,
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: "", //게시판 숫자처리
@@ -269,6 +277,14 @@ export default {
     this.fnGetList();
   },
   methods: {
+    select() {
+      this.selected = [];
+      if (!this.selectAll) {
+        for (let i in this.list) {
+          this.selected.push(this.list[i].idx);
+        }
+      }
+    },
     fnGetDong() {
       this.axios
         .get(this.$serverUrl + "/donghoInfo/dongList")

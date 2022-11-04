@@ -128,7 +128,6 @@
     </button>
   </div>
 
-  <!-- 
   <div class="py-5">
     <div class="container text-start">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
@@ -160,9 +159,9 @@
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
 
-  <!-- <div class="py-5">
+  <div class="py-5">
     <div class="container text-start">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
         <div
@@ -213,7 +212,7 @@
         </button>
       </div>
     </div>
-  </div> -->
+  </div>
 
   <div class="home">
     <img alt="daesung ci" src="../assets/ci.png" />
