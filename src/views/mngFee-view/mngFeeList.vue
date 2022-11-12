@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h1>택배 정보 조회</h1>
+    <h2>관리비</h2>
     <div class="common-buttons">
       <button
         type="button"
@@ -13,47 +13,18 @@
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: 35%" />
-        <col style="width: 15%" />
         <col style="width: *" />
+        <col style="width: 15%" />
+        <col style="width: 45%" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">조회기간</th>
-
+          <th scope="row">동호</th>
           <td style="float: center">
-            <input
-              type="date"
-              style="width: 150px; text-align: center"
-              v-model.trim="startTime"
-            />
-            &emsp;~&emsp;
-            <input
-              type="date"
-              style="width: 150px; text-align: center"
-              v-model.trim="endTime"
-            />
-          </td>
-          <th scope="row">통신결과</th>
-          <td>
-            <select
-              v-model="sendResult"
-              style="width: 350px; height: 25px; text-align: center"
-            >
-              <option value="">----전체----</option>
-              <option value="성공">성공</option>
-              <option value="실패">실패</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">세대정보</th>
-          <td style="float: center">
-            &emsp;&emsp;
             <select
               v-model="dongCode"
               @change="onChange($event)"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 100px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -64,10 +35,10 @@
                 {{ model.name }}
               </option>
             </select>
-            동&emsp;&nbsp;&nbsp;
+            동&nbsp;&nbsp;
             <select
               v-model="hoCode"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 100px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -78,18 +49,22 @@
                 {{ model.name }}
               </option>
             </select>
-            호&emsp;
+            &nbsp;&nbsp;호
           </td>
-          <th scope="row">수령여부</th>
+          <th scope="row">면적타입</th>
           <td>
             <select
-              v-model="parcelStatus"
-              style="width: 350px; height: 25px; text-align: center"
+              v-model="hAreaType"
+              style="width: 150px; height: 25px; text-align: center"
             >
               <option value="">----전체----</option>
-              <option value="미수령">미수령</option>
-              <option value="수령">수령</option>
-              <option value="반품">반품</option>
+              <option
+                v-for="model in items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
             </select>
           </td>
         </tr>
@@ -98,7 +73,7 @@
           <td>
             <input
               type="text"
-              style="width: 350px"
+              style="width: 150px; text-align: center"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
@@ -112,70 +87,59 @@
   </div>
   <div class="buttons">
     <div class="right">
+      <button c class="w3-button w3-round w3-red" @click="fnDelete">
+        삭제
+      </button>
       <button class="button blue" @click="fnSearch">검색</button>
-      <!-- <button class="w3-button w3-round w3-red" @click="fnDelete">삭제</button> -->
       <button class="button" @click="fnList">취소</button>
     </div>
   </div>
-  <!-- 체크박스 추가 -->
-  <!-- <div class="text-uppercase text-bold">id selected: {{ selected }}</div> -->
-  <!-- ------------ -->
   <table class="w3-table-all">
     <colgroup>
-      <col style="width: 5%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
-      <col style="width: *" />
-      <col style="width: *" />
-      <col style="width: *" />
+      <col style="width: 10%" />
+      <col style="width: 10%" />
+      <col style="width: 10%" />
     </colgroup>
     <thead>
       <tr>
-        <!-- 체크박스 추가 -->
-        <!-- <label class="form-checkbox">
-          <input type="checkbox" v-model="selectAll" @click="select" />
-          <i class="form-icon"></i>
-        </label> -->
-        <!-- ------------ -->
         <th>No</th>
         <th>동</th>
         <th>호</th>
-        <th>구분</th>
-        <th>택배회사</th>
-        <th>도착일시</th>
-        <th>수령여부</th>
-        <th>수령일시</th>
-        <th>통신결과</th>
+        <th>평형</th>
+        <th>부과월</th>
+        <th>합계</th>
+        <th>상세보기</th>
       </tr>
     </thead>
-
     <tbody>
-      <tr
-        class="table"
-        v-on:click="fnView(`${row.idx}`)"
-        v-for="(row, i) in list"
-        :key="i"
-      >
-        <!-- 체크박스 추가 -->
-        <!-- <tr class="table" v-for="(row, i) in list" :key="i">
-        <td>
-          <label class="form-checkbox">
-            <input type="checkbox" :value="row.idx" v-model="selected" />
-            <i class="form-icon"></i>
-          </label>
-        </td> -->
-        <!-- --------------------------------------------------------------------------- -->
-        <td>{{ row.No }}</td>
+      <tr class="hi" v-for="(row, i) in list" :key="i">
+        <td>{{ row.no }}</td>
         <td>{{ row.dongCode }}</td>
         <td>{{ row.hoCode }}</td>
-        <td>{{ row.parcelFlag }}</td>
-        <td>{{ row.parcelCorp }}</td>
-        <td>{{ row.arrivalTime }}</td>
-        <td>{{ row.parcelStatus }}</td>
-        <td>{{ row.receiveTime }}</td>
-        <td>{{ row.sendResult }}</td>
+        <td>{{ row.hAreaType }}</td>
+        <td>{{ row.payMonth }}</td>
+        <td>{{ "￦" + row.totalMng }}</td>
+        <td>
+          <div class="table-button-container">
+            <button
+              class="w3-button w3-round w3-green"
+              v-on:click="
+                fnView(
+                  `${row.dongCode}`,
+                  `${row.hoCode}`,
+                  `${row.mngYear}`,
+                  `${row.mngMonth}`
+                )
+              "
+            >
+              <i class="fa fa-remove"></i>상세</button
+            >&nbsp;&nbsp;
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -237,6 +201,8 @@ export default {
   data() {
     //변수생성
     return {
+      selected: [],
+      selectAll: false,
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: "", //게시판 숫자처리
@@ -250,16 +216,12 @@ export default {
       }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
-      startTime: this.$route.query.startTime,
-      endTime: this.$route.query.endTime,
       dongCode: this.$route.query.dongCode,
       hoCode: this.$route.query.hoCode,
-      parcelStatus: this.$route.query.parcelStatus,
-      sendResult: this.$route.query.sendResult,
+      hAreaType: this.$route.query.hAreaType,
       dong_itmes: [],
       ho_items: [],
       items: [],
-
       paginavigation: function () {
         //페이징 처리 for문 커스텀
         let pageNumber = []; //;
@@ -271,14 +233,14 @@ export default {
         for (let i = start_page; i <= end_page; i++) {
           pageNumber.push(i);
         }
-        //console.log("pageNumber.length: %d", pageNumber.length);
         return pageNumber;
       },
     };
   },
   mounted() {
-    this.fnGetDong();
     this.fnGetList();
+    this.fnGetDong();
+    this.fnGethArea();
   },
   methods: {
     fnGetDong() {
@@ -294,7 +256,6 @@ export default {
     },
     onChange(event) {
       console.log("event =>" + event.target.value);
-      //alert(this.dongCode);
       this.fnGetDongho(this.dongCode);
     },
     fnGetDongho(dongCode) {
@@ -302,6 +263,36 @@ export default {
         .get(this.$serverUrl + "/donghoInfo/donghoList?dongCode=" + dongCode)
         .then((res) => {
           this.ho_items = res.data.items;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    fnDelete() {
+      var result = confirm("삭제하시겠습니까?");
+      if (result) {
+        this.axios
+          .delete(this.$serverUrl + "/mngFee/deleteMngFeeList/")
+          .then((res) => {
+            console.log("res.data.resultCode: " + res.data.resultCode);
+            if (res.data.resultCode == "00") {
+              alert("삭제되었습니다.");
+              //alert(JSON.stringify(res.data.resultMsg));
+              this.fnList();
+            } else {
+              alert("삭제되지 않았습니다.");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+    fnGethArea() {
+      this.axios
+        .get(this.$serverUrl + "/donghoInfo/hAreaList")
+        .then((res) => {
+          this.items = res.data.items;
           //alert(JSON.stringify(this.items));
         })
         .catch((err) => {
@@ -313,16 +304,13 @@ export default {
         // 데이터 전송
         page: this.page,
         size: this.size,
-        startTime: this.startTime,
-        endTime: this.endTime,
         dongCode: this.dongCode,
         hoCode: this.hoCode,
-        parcelStatus: this.parcelStatus,
-        sendResult: this.sendResult,
+        hAreaType: this.hAreaType,
       };
 
       this.axios
-        .get(this.$serverUrl + "/parcel/getParcelList", {
+        .get(this.$serverUrl + "/mngFee/getMngFeeList", {
           params: this.requestBody,
           headers: {},
         })
@@ -347,16 +335,19 @@ export default {
           }
         });
     },
-    fnView(idx) {
-      this.requestBody.idx = idx;
+    fnView(dongCode, hoCode, mngYear, mngMonth) {
+      this.requestBody.dongCode = dongCode;
+      this.requestBody.hoCode = hoCode;
+      this.requestBody.mngYear = mngYear;
+      this.requestBody.mngMonth = mngMonth;
       this.$router.push({
-        path: "./parcelListDetail",
+        path: "./detail",
         query: this.requestBody,
       });
     },
     fnWrite() {
       this.$router.push({
-        path: "./parcelInsert",
+        path: "./insert",
       });
     },
     fnSearch() {
@@ -384,12 +375,9 @@ export default {
     fnList() {
       this.page = 1;
       this.size = 10;
-      this.startTime = "";
-      this.endTime = "";
+      this.startDate = "";
       this.dongCode = "";
       this.hoCode = "";
-      this.parcelStatus = "";
-      this.sendResult = "";
 
       this.fnGetList();
     },
@@ -398,8 +386,8 @@ export default {
 </script>
 
 <style scoped>
-.table:hover {
-  background-color: #87ceeb;
+.hi:hover {
+  background-color: yellow;
 }
 body {
   padding: 50px;

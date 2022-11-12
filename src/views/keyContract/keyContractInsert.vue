@@ -8,14 +8,17 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">구&nbsp;&nbsp;&nbsp;&nbsp;분</th>
+          <th scope="row">구&emsp;분</th>
           <td>
-            <input
-              type="text"
-              placeholder="단지시설/주변상가/공공기관/기타시설 중 선택하세요"
+            <select
+              v-model="contractFlag"
               ref="contractFlagInput"
-              v-model.trim="contractFlag"
-            />
+              style="width: 700px; height: 25px; text-align: center"
+            >
+              <option value="단지시설">단지시설</option>
+              <option value="주변상가">주변상가</option>
+              <option value="공공기관">기타시설</option>
+            </select>
           </td>
         </tr>
         <tr>
@@ -41,7 +44,7 @@
           </td>
         </tr>
         <tr>
-          <th scope="row">내&nbsp;&nbsp;&nbsp;&nbsp;용</th>
+          <th scope="row">메&emsp;모</th>
           <td>
             <input
               type="text"

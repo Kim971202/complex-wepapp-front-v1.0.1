@@ -14,41 +14,49 @@
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: *" />
-        <col style="width: 15%" />
-        <col style="width: *" />
+        <col style="width: 35%" />
         <col style="width: 15%" />
         <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">구분</th>
+          <th scope="row">구&emsp;분</th>
+          <td>
+            <select
+              v-model="contractFlag"
+              style="width: 350px; height: 25px; text-align: center"
+            >
+              <option value="단지시설">단지시설</option>
+              <option value="주변상가">주변상가</option>
+              <option value="공공기관">기타시설</option>
+            </select>
+          </td>
+          <th scope="row">시설명</th>
           <td>
             <input
               type="text"
-              ref="titleInput"
-              placeholder="단지시설/주변상가/공공기관/기타시설 중 하나를 입력하세요"
-              v-model.trim="contractFlag"
+              style="width: 350px"
+              ref="facilityName"
+              v-model.trim="facilityName"
             />
           </td>
-          <!-- to do list : 각 구분별 버튼으로 수정 -->
-          <td>
-            <button class="button" @click="fnSearch">검색</button>
-          </td>
         </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <colgroup>
-          <col style="width: 15%" />
-          <col style="width: *" />
-        </colgroup>
+
         <tr>
-          <th scope="row">검색단위</th>
-          <td colspan="3">
+          <th scope="row">연락처</th>
+          <td>
             <input
               type="text"
+              style="width: 350px"
+              ref="phoneNum"
+              v-model.trim="phoneNum"
+            />
+          </td>
+          <th scope="row">검색단위</th>
+          <td>
+            <input
+              type="text"
+              style="width: 350px"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
@@ -61,61 +69,54 @@
   <div class="buttons">
     <div class="right">
       <button class="button blue" @click="fnSearch">검색</button>
-      <button class="w3-button w3-round w3-red" @click="fnDelete">삭제</button>
-      <!-- <button class="button" @click="fnList">취소</button> -->
+      <!-- <button class="w3-button w3-round w3-red" @click="fnDelete">삭제</button> -->
+      <button class="button" @click="fnList">취소</button>
     </div>
   </div>
   <!-- 체크박스 추가 -->
-  <div class="text-uppercase text-bold">id selected: {{ selected }}</div>
+  <!-- <div class="text-uppercase text-bold">id selected: {{ selected }}</div> -->
   <!-- ------------ -->
   <table class="w3-table-all">
     <colgroup>
       <col style="width: 5%" />
-      <col style="width: 5%" />
+      <col style="width: 10%" />
       <col style="width: 20%" />
       <col style="width: 20%" />
       <col style="width: 30%" />
       <col style="width: *" />
-      <col style="width: 5%" />
     </colgroup>
     <thead>
       <tr>
         <!-- 체크박스 추가 -->
-        <label class="form-checkbox">
+        <!-- <label class="form-checkbox">
           <input type="checkbox" v-model="selectAll" @click="select" />
           <i class="form-icon"></i>
-        </label>
+        </label> -->
         <!-- ------------ -->
         <th>No</th>
         <th>구분</th>
         <th>시설명</th>
         <th>연락처</th>
         <th>등록일시</th>
-        <th>수정</th>
+        <th colspan="2">수정</th>
       </tr>
     </thead>
 
     <tbody>
-      <!-- <tr
-        class="table"
-        v-on:click="fnView(`${row.idx}`)"
-        v-for="(row, i) in list"
-        :key="i"
-      ></tr> -->
-      <!-- 체크박스 추가 -->
-      <tr class="table" v-for="(row, i) in list" :key="i">
+      <tr v-for="(row, i) in list" :key="i">
+        <!-- 체크박스 추가 -->
+        <!-- <tr class="table" v-for="(row, i) in list" :key="i">
         <td>
           <label class="form-checkbox">
             <input type="checkbox" :value="row.idx" v-model="selected" />
             <i class="form-icon"></i>
           </label>
-        </td>
+        </td> -->
         <!-- --------------------------------------------------------------------------- -->
         <td>{{ row.No }}</td>
         <td>{{ row.contractFlag }}</td>
         <td>{{ row.facilityName }}</td>
         <td>{{ row.phoneNum }}</td>
-        <!-- <td>{{ row.parcelStatus }}</td> -->
         <td>{{ row.insertDTime }}</td>
         <td>
           <div class="table-button-container">
@@ -123,8 +124,18 @@
               class="w3-button w3-round w3-green"
               v-on:click="fnView(`${row.idx}`)"
             >
-              <i class="fa fa-remove"></i> Edit</button
-            >&nbsp;&nbsp;
+              <i class="fa fa-edit"></i> 수정</button
+            >&emsp;
+          </div>
+        </td>
+        <td>
+          <div class="table-button-container">
+            <button
+              class="w3-button w3-round w3-red"
+              v-on:click="fnDelete(`${row.idx}`)"
+            >
+              <i class="fa fa-delete"></i> 삭제
+            </button>
           </div>
         </td>
       </tr>
@@ -189,8 +200,8 @@ export default {
     //변수생성
     return {
       /** 체크박스 추가 */
-      selected: [],
-      selectAll: false,
+      // selected: [],
+      // selectAll: false,
       /************** */
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
@@ -231,14 +242,14 @@ export default {
   },
   methods: {
     /** 체크박스 추가 */
-    select() {
-      this.selected = [];
-      if (!this.selectAll) {
-        for (let i in this.list) {
-          this.selected.push(this.list[i].idx);
-        }
-      }
-    },
+    // select() {
+    //   this.selected = [];
+    //   if (!this.selectAll) {
+    //     for (let i in this.list) {
+    //       this.selected.push(this.list[i].idx);
+    //     }
+    //   }
+    // },
     /************** */
     fnGetList() {
       this.requestBody = {
@@ -324,31 +335,25 @@ export default {
 
     fnDelete() {
       var result = confirm("삭제하시겠습니까?");
-      console.log("this.selected.length: " + this.selected.length);
-      for (let i = 0; i < this.selected.length; ++i) {
-        // this.selected.push(this.list[i].idx);
-        if (result) {
-          this.axios
-            .delete(
-              this.$serverUrl +
-                "/keyContract/deleteKeyContract/" +
-                this.list[i].idx,
-              {}
-            )
-            .then((res) => {
-              console.log("res.data.resultCode: " + res.data.resultCode);
-              if (res.data.resultCode == "00") {
-                alert("삭제되었습니다.");
-                //alert(JSON.stringify(res.data.resultMsg));
-                this.fnList();
-              } else {
-                alert("삭제되지 않았습니다.");
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
+      if (result) {
+        this.axios
+          .delete(
+            this.$serverUrl + "/keyContract/deleteKeyContract/" + this.idx,
+            {}
+          )
+          .then((res) => {
+            console.log("res.data.resultCode: " + res.data.resultCode);
+            if (res.data.resultCode == "00") {
+              alert("삭제되었습니다.");
+              //alert(JSON.stringify(res.data.resultMsg));
+              this.fnList();
+            } else {
+              alert("삭제되지 않았습니다.");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
   },

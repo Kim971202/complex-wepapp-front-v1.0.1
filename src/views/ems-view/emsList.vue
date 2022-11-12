@@ -1,59 +1,37 @@
 <template>
   <div class="board">
-    <h1>택배 정보 조회</h1>
-    <div class="common-buttons">
-      <button
-        type="button"
-        class="w3-button w3-round w3-teal"
-        v-on:click="fnWrite"
-      >
-        신규
-      </button>
-    </div>
+    <h2>에너지 관리</h2>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
-        <col style="width: 15%" />
-        <col style="width: 35%" />
-        <col style="width: 15%" />
+        <col style="width: *" />
+        <col style="width: *" />
+        <col style="width: *" />
         <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
           <th scope="row">조회기간</th>
-
           <td style="float: center">
             <input
               type="date"
               style="width: 150px; text-align: center"
-              v-model.trim="startTime"
+              v-model.trim="startDate"
             />
-            &emsp;~&emsp;
+            ~
             <input
               type="date"
               style="width: 150px; text-align: center"
-              v-model.trim="endTime"
+              v-bind:disabled="moveOutDtime == ''"
+              v-model.trim="endDate"
             />
           </td>
-          <th scope="row">통신결과</th>
-          <td>
-            <select
-              v-model="sendResult"
-              style="width: 350px; height: 25px; text-align: center"
-            >
-              <option value="">----전체----</option>
-              <option value="성공">성공</option>
-              <option value="실패">실패</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">세대정보</th>
+          <th scope="row">동호</th>
           <td style="float: center">
-            &emsp;&emsp;
             <select
               v-model="dongCode"
               @change="onChange($event)"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 100px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -64,10 +42,10 @@
                 {{ model.name }}
               </option>
             </select>
-            동&emsp;&nbsp;&nbsp;
+            동&nbsp;&nbsp;
             <select
               v-model="hoCode"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 100px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -78,27 +56,34 @@
                 {{ model.name }}
               </option>
             </select>
-            호&emsp;
+            &nbsp;&nbsp;호
           </td>
-          <th scope="row">수령여부</th>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <th scope="row">에너지유형</th>
           <td>
             <select
-              v-model="parcelStatus"
-              style="width: 350px; height: 25px; text-align: center"
+              v-model="energyType"
+              style="width: 150px; height: 25px; text-align: center"
             >
               <option value="">----전체----</option>
-              <option value="미수령">미수령</option>
-              <option value="수령">수령</option>
-              <option value="반품">반품</option>
+              <option
+                v-for="model in ems_items"
+                :key="model.energyType"
+                :value="model.engEnergyType"
+              >
+                {{ model.energyType }}
+              </option>
             </select>
           </td>
-        </tr>
-        <tr>
           <th scope="row">검색단위</th>
           <td>
             <input
               type="text"
-              style="width: 350px"
+              style="width: 150px; text-align: center"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
@@ -113,69 +98,85 @@
   <div class="buttons">
     <div class="right">
       <button class="button blue" @click="fnSearch">검색</button>
-      <!-- <button class="w3-button w3-round w3-red" @click="fnDelete">삭제</button> -->
       <button class="button" @click="fnList">취소</button>
     </div>
   </div>
-  <!-- 체크박스 추가 -->
-  <!-- <div class="text-uppercase text-bold">id selected: {{ selected }}</div> -->
-  <!-- ------------ -->
-  <table class="w3-table-all">
+  <!-- <table class="w3-table-all">
     <colgroup>
       <col style="width: 5%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
-      <col style="width: *" />
-      <col style="width: *" />
-      <col style="width: *" />
-    </colgroup>
+      <col style="width: 10%" />
+      <col style="width: 10%" />
+    </colgroup> -->
+  <table
+    class="table table-bordered"
+    id="dataTable"
+    width="100%"
+    margin="auto"
+    cellspacing="0"
+    text-align="center"
+  >
     <thead>
       <tr>
-        <!-- 체크박스 추가 -->
-        <!-- <label class="form-checkbox">
-          <input type="checkbox" v-model="selectAll" @click="select" />
-          <i class="form-icon"></i>
-        </label> -->
-        <!-- ------------ -->
-        <th>No</th>
-        <th>동</th>
-        <th>호</th>
-        <th>구분</th>
-        <th>택배회사</th>
-        <th>도착일시</th>
-        <th>수령여부</th>
-        <th>수령일시</th>
-        <th>통신결과</th>
+        <th rowspan="2" text-align="center">No</th>
+
+        <th rowspan="2">월</th>
+        <th rowspan="2">세대</th>
+        <th colspan="2" scope="colgroup" id="first">전기</th>
+        <th colspan="2" scope="colgroup" id="second">가스</th>
+        <th colspan="2" scope="colgroup" id="third">수도</th>
+        <th colspan="2" scope="colgroup" id="forth">난방</th>
+        <th colspan="2" scope="colgroup" id="fifth">온수</th>
+        <th colspan="2" scope="colgroup" id="sixth">기타</th>
+        <th rowspan="2">상세보기</th>
+      </tr>
+
+      <tr>
+        <th scope="col" id="meter">검침</th>
+        <th scope="col" id="usage">사용</th>
+        <th scope="col" id="meter">검침</th>
+        <th scope="col" id="usage">사용</th>
+        <th scope="col" id="meter">검침</th>
+        <th scope="col" id="usage">사용</th>
+        <th scope="col" id="meter">검침</th>
+        <th scope="col" id="usage">사용</th>
+        <th scope="col" id="meter">검침</th>
+        <th scope="col" id="usage">사용</th>
+        <th scope="col" id="meter">검침</th>
+        <th scope="col" id="usage">사용</th>
       </tr>
     </thead>
-
     <tbody>
-      <tr
-        class="table"
-        v-on:click="fnView(`${row.idx}`)"
-        v-for="(row, i) in list"
-        :key="i"
-      >
-        <!-- 체크박스 추가 -->
-        <!-- <tr class="table" v-for="(row, i) in list" :key="i">
-        <td>
-          <label class="form-checkbox">
-            <input type="checkbox" :value="row.idx" v-model="selected" />
-            <i class="form-icon"></i>
-          </label>
-        </td> -->
-        <!-- --------------------------------------------------------------------------- -->
+      <tr class="hi" v-for="(row, i) in list" :key="i">
         <td>{{ row.No }}</td>
-        <td>{{ row.dongCode }}</td>
-        <td>{{ row.hoCode }}</td>
-        <td>{{ row.parcelFlag }}</td>
-        <td>{{ row.parcelCorp }}</td>
-        <td>{{ row.arrivalTime }}</td>
-        <td>{{ row.parcelStatus }}</td>
-        <td>{{ row.receiveTime }}</td>
-        <td>{{ row.sendResult }}</td>
+        <td>{{ row.month }}</td>
+        <td>{{ row.dongHo }}</td>
+        <th headers="first meter mandatory">{{ row.elecMeter }}</th>
+        <th headers="first usage mandatory">{{ row.elecUsage }}</th>
+        <th headers="second meter mandatory">{{ row.waterMeter }}</th>
+        <th headers="second usage mandatory">{{ row.waterUsage }}</th>
+        <th headers="third meter mandatory">{{ row.gasMeter }}</th>
+        <th headers="third usage mandatory">{{ row.gasUsage }}</th>
+        <th headers="forth meter mandatory">{{ row.heatingMeter }}</th>
+        <th headers="forth usage mandatory">{{ row.heatingUsage }}</th>
+        <th headers="fifth meter mandatory">{{ row.hotWaterMeter }}</th>
+        <th headers="fifth usage mandatory">{{ row.hotWaterUsage }}</th>
+        <th headers="sixth meter mandatory">{{ row.airconMeter }}</th>
+        <th headers="sixth usage mandatory">{{ row.airconUsage }}</th>
+
+        <td>
+          <div class="table-button-container">
+            <button
+              class="w3-button w3-round w3-green"
+              v-on:click="fnView(`${row.idx}`)"
+            >
+              <i class="fa fa-remove"></i>보기</button
+            >&nbsp;&nbsp;
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -237,9 +238,14 @@ export default {
   data() {
     //변수생성
     return {
+      selected: [],
+      selectAll: false,
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: "", //게시판 숫자처리
+      dong_items: [],
+      ho_items: [],
+      items: [],
       paging: {
         totalCount: 0,
         total_page: 0,
@@ -250,15 +256,11 @@ export default {
       }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
-      startTime: this.$route.query.startTime,
-      endTime: this.$route.query.endTime,
+      startDate: this.$route.query.startDate,
+      endDate: this.$route.query.endDate,
       dongCode: this.$route.query.dongCode,
       hoCode: this.$route.query.hoCode,
-      parcelStatus: this.$route.query.parcelStatus,
-      sendResult: this.$route.query.sendResult,
-      dong_itmes: [],
-      ho_items: [],
-      items: [],
+      energyType: this.$route.query.energyType,
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀
@@ -271,7 +273,6 @@ export default {
         for (let i = start_page; i <= end_page; i++) {
           pageNumber.push(i);
         }
-        //console.log("pageNumber.length: %d", pageNumber.length);
         return pageNumber;
       },
     };
@@ -279,8 +280,27 @@ export default {
   mounted() {
     this.fnGetDong();
     this.fnGetList();
+    this.fnGetEnergyType();
   },
   methods: {
+    select() {
+      this.selected = [];
+      if (!this.selectAll) {
+        for (let i in this.list) {
+          this.selected.push(this.list[i].idx);
+        }
+      }
+    },
+    fnGetEnergyType() {
+      this.axios
+        .get(this.$serverUrl + "/ems/energyList")
+        .then((res) => {
+          this.ems_items = res.data.items;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     fnGetDong() {
       this.axios
         .get(this.$serverUrl + "/donghoInfo/dongList")
@@ -313,22 +333,18 @@ export default {
         // 데이터 전송
         page: this.page,
         size: this.size,
-        startTime: this.startTime,
-        endTime: this.endTime,
+        startDate: this.startDate,
+        endDate: this.endDate,
         dongCode: this.dongCode,
         hoCode: this.hoCode,
-        parcelStatus: this.parcelStatus,
-        sendResult: this.sendResult,
+        energyType: this.energyType,
       };
-
       this.axios
-        .get(this.$serverUrl + "/parcel/getParcelList", {
+        .get(this.$serverUrl + "/ems/getEMS", {
           params: this.requestBody,
           headers: {},
         })
         .then((res) => {
-          //this.list = res.data; //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.
-          //alert(res.data.resultCode);
           if (res.data.resultCode == "00") {
             this.list = res.data.list;
             this.paging = res.data.paging;
@@ -346,18 +362,6 @@ export default {
             alert(err.message);
           }
         });
-    },
-    fnView(idx) {
-      this.requestBody.idx = idx;
-      this.$router.push({
-        path: "./parcelListDetail",
-        query: this.requestBody,
-      });
-    },
-    fnWrite() {
-      this.$router.push({
-        path: "./parcelInsert",
-      });
     },
     fnSearch() {
       //검색
@@ -384,24 +388,51 @@ export default {
     fnList() {
       this.page = 1;
       this.size = 10;
-      this.startTime = "";
-      this.endTime = "";
+      this.startDate = "";
+      this.endDate = "";
       this.dongCode = "";
       this.hoCode = "";
-      this.parcelStatus = "";
-      this.sendResult = "";
-
+      this.energyType = "";
       this.fnGetList();
+    },
+    fnView(date) {
+      console.log(this.startDate);
+      if (this.startDate === undefined) {
+        alert("시작일을 입력하세요.");
+        this.$refs.startDateInput.focus();
+        return;
+      } else if (this.endDate === undefined) {
+        alert("종료일을 입력하세요.");
+        this.$refs.endDateInput.focus();
+        return;
+      } else if (this.dongCode === undefined) {
+        alert("동 정보를 입력하세요.");
+        this.$refs.dongCodeInput.focus();
+        return;
+      } else if (this.hoCode === undefined) {
+        alert("호 정보를 입력하세요.");
+        this.$refs.hoCodeInput.focus();
+        return;
+      } else if (this.energyType === undefined) {
+        alert("에너지유형을 입력하세요.");
+        this.$refs.endDateInput.focus();
+        return;
+      }
+      this.requestBody.date = date;
+      this.$router.push({
+        path: "./detail",
+        query: this.requestBody,
+      });
     },
   },
 };
 </script>
 
 <style scoped>
-.table:hover {
-  background-color: #87ceeb;
+.hi:hover {
+  background-color: yellow;
 }
-body {
+/* body {
   padding: 50px;
-}
+} */
 </style>

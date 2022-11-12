@@ -1,9 +1,6 @@
 <template>
   <div class="board">
-    <h2>입출차정보</h2>
-    <table>
-      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
-    </table>
+    <h1>입출차정보</h1>
     <table>
       <colgroup>
         <col style="width: 15%" />
@@ -40,7 +37,7 @@
           <td>
             <select
               v-model="sendResult"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 350px; height: 25px; text-align: center"
             >
               <option value="">----전체----</option>
               <option value="성공">성공</option>
@@ -66,7 +63,7 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;동&nbsp;&nbsp;
+            동&emsp;&nbsp;&nbsp;
             <select
               v-model="hoCode"
               style="width: 150px; height: 25px; text-align: center"
@@ -80,36 +77,32 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;호
+            호&emsp;
           </td>
           <th scope="row">차량번호</th>
           <td>
             <input
               type="text"
-              ref="authorInput"
+              style="width: 350px"
+              ref="carNumber"
               v-model.trim="carNumber"
               @keyup.enter="fnSearch"
             />
           </td>
         </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <colgroup>
-          <col style="width: 15%" />
-          <col style="width: *" />
-        </colgroup>
         <tr>
           <th scope="row">검색단위</th>
           <td>
             <input
               type="text"
+              style="width: 350px"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
             />
           </td>
+          <td></td>
+          <td></td>
         </tr>
       </tbody>
     </table>
@@ -128,14 +121,14 @@
         검색
       </button> -->
   </div>
-  <!-- <table class="w3-table-all"> -->
-  <table
+  <table class="w3-table-all">
+    <!-- <table
     class="table table-bordered"
     id="dataTable"
     width="100%"
     cellspacing="0"
-  >
-    <!-- <colgroup>
+  > -->
+    <colgroup>
       <col style="width: 5%" />
       <col style="width: 10%" />
       <col style="width: 10%" />
@@ -144,7 +137,7 @@
       <col style="width: *" />
       <col style="width: *" />
       <col style="width: 10%" />
-    </colgroup> -->
+    </colgroup>
     <thead>
       <tr>
         <!-- <th>
@@ -232,8 +225,6 @@ export default {
   data() {
     //변수생성
     return {
-      selected: [],
-      selectAll: false,
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: "", //게시판 숫자처리
@@ -277,14 +268,6 @@ export default {
     this.fnGetList();
   },
   methods: {
-    select() {
-      this.selected = [];
-      if (!this.selectAll) {
-        for (let i in this.list) {
-          this.selected.push(this.list[i].idx);
-        }
-      }
-    },
     fnGetDong() {
       this.axios
         .get(this.$serverUrl + "/donghoInfo/dongList")

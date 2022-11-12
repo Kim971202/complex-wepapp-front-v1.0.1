@@ -235,19 +235,85 @@ const routes = [
     meta: { requireLogin: true },
   },
 
-  {
-    path: "/notice/noticeList",
-    name: "noticeList",
-    component: () => import("../views/notice/noticeList.vue"),
-    meta: { requireLogin: true },
-  },
-  {
-    path: "/notice/noticeListDetail",
-    name: "noticeListDetail",
-    component: () => import("../views/notice/noticeListDetail.vue"),
-    meta: { requireLogin: true },
-  },
+  // {
+  //   path: "/notice/noticeList",
+  //   name: "noticeList",
+  //   component: () => import("../views/notice/noticeList.vue"),
+  //   meta: { requireLogin: true },
+  // },
+  // {
+  //   path: "/notice/noticeListDetail",
+  //   name: "noticeListDetail",
+  //   component: () => import("../views/notice/noticeListDetail.vue"),
+  //   meta: { requireLogin: true },
+  // },
   /************************************************************************************************************** */
+  {
+    path: "/ems/list",
+    name: "emsList",
+    component: () => import("../views/ems-view/emsList.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/ems/detail",
+    name: "emsDetail",
+    component: () => import("../views/ems-view/emsDetail.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/notice/list",
+    name: "noticeList",
+    component: () => import("../views/notice-view/noticeList.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/notice/detail",
+    name: "noticeDetail",
+    component: () => import("../views/notice-view/noticeDetail.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/notice/insert",
+    name: "noticeInsert",
+    component: () => import("../views/notice-view/noticeInsert.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/notice/update",
+    name: "noticeUpdate",
+    component: () => import("../views/notice-view/noticeUpdate.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/vote/list",
+    name: "voteList",
+    component: () => import("../views/vote-view/voteList.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/vote/detail",
+    name: "voteDetail",
+    component: () => import("../views/vote-view/voteDetail.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/vote/insert",
+    name: "voteInsert",
+    component: () => import("../views/vote-view/voteInsert.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/mngFee/list",
+    name: "mngFeeList",
+    component: () => import("../views/mngFee-view/mngFeeList.vue"),
+    meta: { requireLogin: true },
+  },
+  {
+    path: "/mngFee/detail",
+    name: "mngFeeDetail",
+    component: () => import("../views/mngFee-view/mngFeeDetail.vue"),
+    meta: { requireLogin: true },
+  },
 ];
 
 const router = createRouter({

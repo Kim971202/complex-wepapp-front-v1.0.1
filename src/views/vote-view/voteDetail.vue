@@ -1,32 +1,35 @@
 <template>
   <div class="board">
-    <h1>택배 상세정보</h1>
+    <h2>주민투표 상세보기</h2>
     <table>
       <colgroup>
         <col style="width: 18.5%" />
-        <col style="width: auto" />
+        <col style="width: " />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">도착일시</th>
-          <td>{{ arrivalTime }}</td>
+          <th scope="row">투표제목</th>
+          <td class="title">{{ voteTitle }}</td>
         </tr>
         <tr>
-          <th scope="row">수령여부</th>
-          <!-- <span v-html="parcelStatus"></span> -->
-          <td>{{ parcelStatus }}</td>
+          <th scope="row">시작일시</th>
+          <td>{{ vStartDTime }}</td>
         </tr>
         <tr>
-          <th scope="row">동</th>
-          <td><span v-html="dongCode"></span></td>
+          <th scope="row">마감일시</th>
+          <td>{{ vEndDTime }}</td>
         </tr>
         <tr>
-          <th scope="row">호</th>
-          <td><span v-html="hoCode"></span></td>
-        </tr>
-        <tr>
-          <th scope="row">메모(택배회사)</th>
-          <td>{{ memo }}</td>
+          <th scope="row">항목</th>
+          <table>
+            <tr v-for="(item, index) in voteItems" v-bind:key="index">
+              <td>
+                <input type="checkbox" value="all" v-model="allSelected" />
+              </td>
+              <td>{{ item.itemNo }}</td>
+              <td>{{ item.itemContent }}</td>
+            </tr>
+          </table>
         </tr>
       </tbody>
     </table>
@@ -48,11 +51,26 @@
       >&nbsp;
       <button
         type="button"
-        class="w3-button w3-round w3-blue-gray"
+        class="w3-button w3-round w3-blue"
         v-on:click="fnList"
       >
-        목록
+        투표마감</button
+      >&nbsp;
+      <button
+        type="button"
+        class="w3-button w3-round w3-green"
+        v-on:click="fnList"
+      >
+        결과보기
       </button>
+      &nbsp;
+      <button
+        type="button"
+        class="w3-button w3-round w3-black"
+        v-on:click="fnList"
+      >
+        종료</button
+      >&nbsp;
     </div>
   </div>
 </template>
@@ -64,11 +82,10 @@ export default {
     return {
       requestBody: this.$route.query,
       idx: this.$route.query.idx,
-      arrivalTime: "",
-      parcelStatus: "",
-      dongCode: "",
-      hoCode: "",
-      memo: "",
+      voteTitle: "",
+      vStartDTime: "",
+      vEndDTime: "",
+      voteItems: [],
     };
   },
   mounted() {
@@ -77,18 +94,14 @@ export default {
   methods: {
     fnGetView() {
       this.axios
-        .get(this.$serverUrl + "/parcel/getDetailedParcelList/" + this.idx, {
+        .get(this.$serverUrl + "/vote/getDetailedVoteAgenda/", {
           params: this.requestBody,
         })
-
         .then((res) => {
-          this.arrivalTime = res.data.arrivalTime;
-          this.parcelStatus = res.data.parcelStatus;
-          this.dongCode = res.data.dongCode;
-          this.hoCode = res.data.hoCode;
-          this.memo = res.data.memo.split("\n").join("<br>"); //개행처리
-          // this.contents = res.data.contents.split("\n").join("<br>"); //개행처리
-          // this.created_at = res.data.created_at;
+          this.voteTitle = res.data.voteTitle;
+          this.vStartDTime = res.data.vStartDTime;
+          this.vEndDTime = res.data.vEndDTime;
+          this.voteItems = res.data.voteItems;
         })
         .catch((err) => {
           if (err.message.indexOf("Network Error") > -1) {
@@ -96,17 +109,16 @@ export default {
           }
         });
     },
-
     fnList() {
       delete this.requestBody.idx;
       this.$router.push({
-        path: "./parcelList",
+        path: "./list",
         query: this.requestBody,
       });
     },
     fnUpdate() {
       this.$router.push({
-        path: "./parcelListUpdate",
+        path: "./update",
         query: this.requestBody,
       });
     },
@@ -114,12 +126,11 @@ export default {
       var result = confirm("삭제하시겠습니까?");
       if (result) {
         this.axios
-          .delete(this.$serverUrl + "/parcel/deleteParcel/" + this.idx, {})
+          .delete(this.$serverUrl + "/vote/deleteVoteAgenda/" + this.idx, {})
           .then((res) => {
             console.log("res.data.resultCode: " + res.data.resultCode);
             if (res.data.resultCode == "00") {
               alert("삭제되었습니다.");
-              //alert(JSON.stringify(res.data.resultMsg));
               this.fnList();
             } else {
               alert("삭제되지 않았습니다.");

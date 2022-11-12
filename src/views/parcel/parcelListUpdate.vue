@@ -31,7 +31,7 @@
         </tr>
         <tr>
           <th scope="row">메모(택배회사)</th>
-          <td colspan="3">
+          <td>
             <textarea
               rows="3"
               placeholder="메모를 입력하세요."

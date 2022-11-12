@@ -20,16 +20,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
           <ul class="navbar-nav me-auto">
-            <!-- <li class="nav-item">
+            <li class="nav-item">
               <router-link :to="{ name: 'BoardList' }" class="nav-link"
                 >Board</router-link
               >
-            </li> -->
-            <li class="nav-item">
+            </li>
+            <!-- <li class="nav-item">
               <router-link to="/board/list" class="nav-link"
                 >sBoard</router-link
               >
-            </li>
+            </li> -->
             <!-- ------------------------------------------- 추가 코드 2 ----------------------------------------- -->
             <li class="nav-item">
               <router-link to="/donghoInfo/donghoInfolist" class="nav-link"
@@ -38,7 +38,7 @@
             </li>
             <!-- ------------------------------------------- 추가 코드 ------------------------------------------- -->
             <li class="nav-item">
-              <router-link to="/notice/noticeList" class="nav-link"
+              <router-link to="/notice/list" class="nav-link"
                 >공지사항</router-link
               >
             </li>
@@ -80,6 +80,20 @@
             <li class="nav-item">
               <router-link to="/contractDoc/contractDocList" class="nav-link"
                 >계약자료</router-link
+              >
+            </li>
+            <!-- ------------------------------------------------------------------------------------------------- -->
+            <li class="nav-item">
+              <router-link to="/ems/list" class="nav-link">EMS</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/vote/list" class="nav-link"
+                >주민투표</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link to="/mngFee/list" class="nav-link"
+                >관리비</router-link
               >
             </li>
             <!-- ------------------------------------------------------------------------------------------------- -->

@@ -8,47 +8,53 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">구분</th>
+          <th scope="row">구&emsp;분</th>
           <td>
-            <textarea
-              rows="1"
-              placeholder="단지시설/주변상가/공공기관/기타시설 중 선택하세요"
-              ref="contractFlagTextarea"
-              v-model.trim="contractFlag"
-            ></textarea>
+            <select
+              v-model="contractFlag"
+              ref="contractFlagInput"
+              style="width: 700px; height: 25px; text-align: center"
+            >
+              <option value="단지시설">단지시설</option>
+              <option value="주변상가">주변상가</option>
+              <option value="공공기관">기타시설</option>
+            </select>
           </td>
         </tr>
         <tr>
           <th scope="row">시설명</th>
           <td>
-            <textarea
+            <input
               rows="1"
+              style="width: 700px"
               placeholder="시설의 명칭을 입력하세요"
               ref="facilityNameTextarea"
               v-model.trim="facilityName"
-            ></textarea>
+            />
           </td>
         </tr>
         <tr>
           <th scope="row">연락처</th>
           <td>
-            <textarea
+            <input
               rows="1"
+              style="width: 700px"
               placeholder="연락처를 입력하세요"
               ref="phoneNumTextarea"
               v-model.trim="phoneNum"
-            ></textarea>
+            />
           </td>
         </tr>
         <tr>
-          <th scope="row">메모</th>
+          <th scope="row">메&emsp;모</th>
           <td>
-            <textarea
+            <input
               rows="1"
+              style="width: 700px"
               placeholder=""
               ref="memoTextarea"
               v-model.trim="memo"
-            ></textarea>
+            />
           </td>
         </tr>
       </tbody>
@@ -93,9 +99,12 @@ export default {
     fnGetView() {
       if (this.idx !== undefined) {
         this.axios
-          .get(this.$serverUrl + "/keyContract/getKeyContract/" + this.idx, {
-            params: this.requestBody,
-          })
+          .get(
+            this.$serverUrl + "/keyContract/getDetailedKeyContract/" + this.idx,
+            {
+              params: this.requestBody,
+            }
+          )
           .then((res) => {
             this.contractFlag = res.data.contractFlag;
             this.facilityName = res.data.facilityName;
@@ -114,27 +123,27 @@ export default {
         query: this.requestBody,
       });
     },
-    // fnView(idx) {
-    //   this.requestBody.idx = idx;
-    //   this.$router.push({
-    //     path: "./parcelListDetail",
-    //     query: this.requestBody,
-    //   });
-    // },
+    fnView(idx) {
+      this.requestBody.idx = idx;
+      this.$router.push({
+        path: "./keyContractList",
+        query: this.requestBody,
+      });
+    },
     fnSave() {
       if (this.contractFlag == "") {
         alert("시설 항목을 입력하세요.");
-        this.$refs.contractFlagTextArea.focus();
+        this.$refs.contractFlagInput.focus();
         return;
       }
       if (this.facilityName == "") {
         alert("시설 명칭을 입력하세요.");
-        this.$refs.facilityNameTextArea.focus();
+        this.$refs.facilityNameInput.focus();
         return;
       }
       if (this.phoneNum == "") {
         alert("연락처를 입력하세요.");
-        this.$refs.phoneNumTextArea.focus();
+        this.$refs.phoneNumInput.focus();
         return;
       }
 

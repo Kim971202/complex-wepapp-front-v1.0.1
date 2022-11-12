@@ -1,9 +1,6 @@
 <template>
   <div class="board">
-    <h2>엘리베이터 제어이력</h2>
-    <table>
-      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
-    </table>
+    <h1>엘리베이터 제어이력</h1>
     <table>
       <colgroup>
         <col style="width: 15%" />
@@ -35,7 +32,7 @@
           <td>
             <select
               v-model="commResult"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 350px; height: 25px; text-align: center"
             >
               <option value="">----전체----</option>
               <option value="성공">성공</option>
@@ -61,7 +58,7 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;동&nbsp;&nbsp;
+            동&emsp;&nbsp;&nbsp;
             <select
               v-model="hoCode"
               style="width: 150px; height: 25px; text-align: center"
@@ -75,13 +72,13 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;호
+            호&emsp;
           </td>
           <th scope="row">제어방향</th>
           <td>
             <select
               v-model="elvDirection"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 350px; height: 25px; text-align: center"
             >
               <option value="">----전체----</option>
               <option value="상향">상향</option>
@@ -89,25 +86,26 @@
             </select>
           </td>
         </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <colgroup>
-          <col style="width: 15%" />
-          <col style="width: *" />
-        </colgroup>
         <tr>
           <th scope="row">검색단위</th>
-          <td colspan="3">
+          <td>
             <input
               type="text"
+              style="width: 350px"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
             />
           </td>
+          <td></td>
+          <td></td>
         </tr>
+      </tbody>
+      <tbody>
+        <colgroup>
+          <col style="width: 15%" />
+          <col style="width: *" />
+        </colgroup>
       </tbody>
     </table>
   </div>

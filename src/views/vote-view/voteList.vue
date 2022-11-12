@@ -1,90 +1,38 @@
 <template>
   <div class="board">
-    <h1>주차 위치</h1>
+    <h2>주민투표</h2>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: 35%" />
-        <col style="width: 15%" />
         <col style="width: *" />
+        <col style="width: 15%" />
+        <col style="width: 45%" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">조회기간</th>
-
-          <td style="float: center">
-            <!-- <input
-              type="checkbox"
-              v-model="moveOutDtime"
-              true-value="yes"
-              false-value=""
-              style="width: 30px"
-            /> -->
-            <!-- {{ moveOutDtime }} -->
-            <input
-              type="date"
-              style="width: 150px; text-align: center"
-              v-bind:disabled="startTime == ''"
-              v-model.trim="startTime"
-            />
-            &emsp;~&emsp;
-            <input
-              type="date"
-              style="width: 150px; text-align: center"
-              v-bind:disabled="endTime == ''"
-              v-model.trim="endTime"
-            />
+          <th scope="row">시작일</th>
+          <td>
+            <input type="text" ref="startDateInput" v-model.trim="startDate" />
           </td>
-          <th scope="row">차량번호</th>
+          <th scope="row">종료일</th>
+          <td>
+            <input type="text" ref="endDateInput" v-model.trim="endDate" />
+          </td>
+          <th scope="row">개표여부</th>
           <td>
             <input
               type="text"
-              style="width: 350px"
-              ref="carNumberInput"
-              v-model.trim="carNumber"
-              @keyup.enter="fnSearch"
+              ref="voteStatusInput"
+              v-model.trim="voteStatus"
             />
           </td>
         </tr>
         <tr>
-          <th scope="row">세대정보</th>
-          <td style="float: center">
-            &emsp;&emsp;
-            <select
-              v-model="dongCode"
-              @change="onChange($event)"
-              style="width: 150px; height: 25px; text-align: center"
-            >
-              <option value="">---전체---</option>
-              <option
-                v-for="model in dong_items"
-                :key="model.code"
-                :value="model.code"
-              >
-                {{ model.name }}
-              </option>
-            </select>
-            동&emsp;&nbsp;&nbsp;
-            <select
-              v-model="hoCode"
-              style="width: 150px; height: 25px; text-align: center"
-            >
-              <option value="">---전체---</option>
-              <option
-                v-for="model in ho_items"
-                :key="model.code"
-                :value="model.code"
-              >
-                {{ model.name }}
-              </option>
-            </select>
-            호&emsp;
-          </td>
           <th scope="row">검색단위</th>
-          <td>
+          <td colspan="3">
             <input
               type="text"
-              style="width: 350px"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
@@ -98,60 +46,61 @@
     <div class="right">
       <button class="button blue" @click="fnSearch">검색</button>
       <button class="button" @click="fnList">취소</button>
+      <button class="button" @click="fnWrite">신규</button>
     </div>
-    <!-- <div class="common-buttons">
-          <button
-            type="button"
-            class="w3-button w3-round w3-blue-gray"
-            v-on:click="fnSearch"
-          >
-            검색
-          </button> -->
   </div>
+  <div class="text-uppercase text-bold">id selected: {{ selected }}</div>
   <table class="w3-table-all">
     <colgroup>
-      <col style="width: 5%" />
       <col style="width: 10%" />
-      <col style="width: 10%" />
+      <col style="width: *" />
       <col style="width: 20%" />
       <col style="width: 30%" />
-      <col style="width: *" />
     </colgroup>
     <thead>
       <tr>
+        <label class="form-checkbox">
+          <input type="checkbox" v-model="selectAll" @click="select" />
+          <i class="form-icon"></i>
+        </label>
         <th>No</th>
-        <th>동</th>
-        <th>호</th>
-        <th>Tag ID</th>
-        <th>주차위치</th>
-        <th>등록일시</th>
+        <th>투표제목</th>
+        <th>투표시작일시</th>
+        <th>투표종료일시</th>
+        <th>투표율(%)</th>
+        <th>개표여부</th>
+        <th>작성자</th>
+        <th>수정보기</th>
       </tr>
     </thead>
-
     <tbody>
-      <tr
-        class="table"
-        v-on:click="fnView(`${row.idx}`)"
-        v-for="(row, i) in list"
-        :key="i"
-      >
-        <td>{{ row.No }}</td>
-        <td>{{ row.dongCode }}</td>
-        <td>{{ row.hoCode }}</td>
-        <td>{{ row.tagName }}</td>
-        <td>{{ row.parkingLocation }}</td>
-        <td>{{ row.posUpdateDate }}</td>
+      <tr class="hi" v-for="(row, i) in list" :key="i">
+        <td>
+          <label class="form-checkbox">
+            <input type="checkbox" :value="row.idx" v-model="selected" />
+            <i class="form-icon"></i>
+          </label>
+        </td>
+        <td>{{ row.no }}</td>
+        <td>{{ row.voteTitle }}</td>
+        <td>{{ row.vStartDTime }}</td>
+        <td>{{ row.vEndDTime }}</td>
+        <td>{{ row.voteRate + "%" }}</td>
+        <td>{{ row.vEndFlag }}</td>
+        <td>{{ row.userCode }}</td>
+        <td>
+          <div class="table-button-container">
+            <button
+              class="w3-button w3-round w3-green"
+              v-on:click="fnView(`${row.idx}`)"
+            >
+              <i class="fa fa-remove"></i>상세</button
+            >&nbsp;&nbsp;
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
-  <!-- <br />
-      <div class="buttons">
-        <div class="right">
-          <button class="w3-button w3-round w3-red" v-on:click="fnDelete">
-            삭제
-          </button>
-        </div>
-      </div> -->
   <div
     class="pagination w3-bar w3-padding-16 w3-small"
     v-if="paging.totalCount > 0"
@@ -210,6 +159,8 @@ export default {
   data() {
     //변수생성
     return {
+      selected: [],
+      selectAll: false,
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: "", //게시판 숫자처리
@@ -223,16 +174,9 @@ export default {
       }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
-      startTime: this.$route.query.startTime,
-      endTime: this.$route.query.endTime,
-      dongCode: this.$route.query.dongCode,
-      hoCode: this.$route.query.hoCode,
-      tagName: this.$route.query.tagName,
-      parkingLocation: this.$route.query.parkingLocation,
-      posUpdateDate: this.$route.query.posUpdateDate,
-      dong_itmes: [],
-      ho_items: [],
-      items: [],
+      startDate: this.$route.query.startDate,
+      endDate: this.$route.query.endDate,
+      voteEndFlag: this.$route.query.voteEndFlag,
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀
@@ -251,53 +195,29 @@ export default {
     };
   },
   mounted() {
-    this.fnGetDong();
     this.fnGetList();
   },
   methods: {
-    fnGetDong() {
-      this.axios
-        .get(this.$serverUrl + "/donghoInfo/dongList")
-        .then((res) => {
-          this.dong_items = res.data.items;
-          //alert(JSON.stringify(this.items));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    onChange(event) {
-      console.log("event =>" + event.target.value);
-      //alert(this.dongCode);
-      this.fnGetDongho(this.dongCode);
-    },
-    fnGetDongho(dongCode) {
-      this.axios
-        .get(this.$serverUrl + "/donghoInfo/donghoList?dongCode=" + dongCode)
-        .then((res) => {
-          this.ho_items = res.data.items;
-          //alert(JSON.stringify(this.items));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    select() {
+      this.selected = [];
+      if (!this.selectAll) {
+        for (let i in this.list) {
+          this.selected.push(this.list[i].idx);
+        }
+      }
     },
     fnGetList() {
       this.requestBody = {
         // 데이터 전송
         page: this.page,
         size: this.size,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        dongCode: this.dongCode,
-        hoCode: this.hoCode,
-        tagName: this.tagName,
-        parkingLocation: this.parkingLocation,
-        posUpdateDate: this.posUpdateDate,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        voteEndFlag: this.voteEndFlag,
       };
 
       this.axios
-        .get(this.$serverUrl + "/parking/getCarLocationList", {
+        .get(this.$serverUrl + "/vote/getVoteAgenda", {
           params: this.requestBody,
           headers: {},
         })
@@ -325,15 +245,15 @@ export default {
     fnView(idx) {
       this.requestBody.idx = idx;
       this.$router.push({
-        path: "./parkingLocDetail",
+        path: "./detail",
         query: this.requestBody,
       });
     },
-    // fnWrite() {
-    //   this.$router.push({
-    //     path: "./insert",
-    //   });
-    // },
+    fnWrite() {
+      this.$router.push({
+        path: "./insert",
+      });
+    },
     fnSearch() {
       //검색
       this.paging.page = 1;
@@ -359,13 +279,9 @@ export default {
     fnList() {
       this.page = 1;
       this.size = 10;
-      // this.startTime = "";
-      // this.endTime = "";
-      this.dongCode = "";
-      this.hoCode = "";
-      this.tagName = "";
-      this.parkingLocation = "";
-      this.posUpdateDate = "";
+      this.startDate = "";
+      this.endDate = "";
+      this.voteEndFlag = "";
 
       this.fnGetList();
     },
@@ -374,7 +290,10 @@ export default {
 </script>
 
 <style scoped>
-.table:hover {
-  background-color: #87ceeb;
+.hi:hover {
+  background-color: yellow;
+}
+body {
+  padding: 50px;
 }
 </style>
