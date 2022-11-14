@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h2>동호정보</h2>
+    <h1>동호정보</h1>
     <div class="common-buttons">
       <!-- <button
         type="button"
