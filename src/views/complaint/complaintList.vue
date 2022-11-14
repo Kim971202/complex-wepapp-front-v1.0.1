@@ -1,6 +1,7 @@
 <template>
   <div class="board">
     <h1>민원관리</h1>
+    <div class="common-buttons"></div>
     <!-- <div class="common-buttons">
       <button
         type="button"
