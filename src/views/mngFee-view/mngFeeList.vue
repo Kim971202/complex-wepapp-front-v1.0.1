@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h2>관리비</h2>
+    <h1>관리비</h1>
     <div class="common-buttons">
       <button
         type="button"
@@ -13,18 +13,19 @@
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: *" />
+        <col style="width: 35%" />
         <col style="width: 15%" />
-        <col style="width: 45%" />
+        <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">동호</th>
+          <th scope="row">세대정보</th>
           <td style="float: center">
+            &emsp;&emsp;
             <select
               v-model="dongCode"
               @change="onChange($event)"
-              style="width: 100px; height: 25px; text-align: center"
+              style="width: 150px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -35,10 +36,10 @@
                 {{ model.name }}
               </option>
             </select>
-            동&nbsp;&nbsp;
+            동&emsp;&nbsp;&nbsp;
             <select
               v-model="hoCode"
-              style="width: 100px; height: 25px; text-align: center"
+              style="width: 150px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -49,13 +50,13 @@
                 {{ model.name }}
               </option>
             </select>
-            &nbsp;&nbsp;호
+            호&emsp;
           </td>
           <th scope="row">면적타입</th>
           <td>
             <select
               v-model="hAreaType"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 350px; height: 25px; text-align: center"
             >
               <option value="">----전체----</option>
               <option
@@ -73,7 +74,7 @@
           <td>
             <input
               type="text"
-              style="width: 150px; text-align: center"
+              style="width: 350px; text-align: center"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"

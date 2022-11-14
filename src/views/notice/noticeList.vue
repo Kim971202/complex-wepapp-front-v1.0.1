@@ -10,9 +10,7 @@
         신규
       </button>
     </div>
-    <table>
-      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
-    </table>
+
     <table>
       <colgroup>
         <col style="width: 15%" />

@@ -1,28 +1,36 @@
 <template>
   <div class="board">
-    <h2>주민투표</h2>
+    <h1>주민투표</h1>
     <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 15%" />
-        <col style="width: *" />
+        <col style="width: 35%" />
         <col style="width: 15%" />
-        <col style="width: 45%" />
+        <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">시작일</th>
-          <td>
-            <input type="text" ref="startDateInput" v-model.trim="startDate" />
-          </td>
-          <th scope="row">종료일</th>
-          <td>
-            <input type="text" ref="endDateInput" v-model.trim="endDate" />
+          <th scope="row">조회기간</th>
+          <td style="float: center">
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-model.trim="startDate"
+            />
+            &emsp;~&emsp;
+            <input
+              type="date"
+              style="width: 150px; text-align: center"
+              v-bind:disabled="moveOutDtime == ''"
+              v-model.trim="endDate"
+            />
           </td>
           <th scope="row">개표여부</th>
           <td>
             <input
               type="text"
+              style="width: 350px"
               ref="voteStatusInput"
               v-model.trim="voteStatus"
             />
@@ -30,14 +38,17 @@
         </tr>
         <tr>
           <th scope="row">검색단위</th>
-          <td colspan="3">
+          <td>
             <input
               type="text"
+              style="width: 350px"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
             />
           </td>
+          <td></td>
+          <td></td>
         </tr>
       </tbody>
     </table>

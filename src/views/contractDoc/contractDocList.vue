@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h2>계약자료</h2>
+    <h1>계약자료</h1>
     <div class="common-buttons">
       <button
         type="button"
@@ -15,11 +15,13 @@
       <colgroup>
         <col style="width: 15%" />
         <col style="width: 35%" />
+        <col style="width: 15%" />
+        <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
           <th scope="row">조회기간</th>
-          <td style="float: left">
+          <td style="float: center">
             <input
               type="date"
               style="width: 150px; text-align: center"
@@ -34,36 +36,30 @@
               v-model.trim="endDate"
             />
           </td>
-        </tr>
-        <tr>
           <th scope="row">제 목</th>
           <td>
             <input
               type="text"
+              style="width: 350px"
               ref="contractTitleInput"
               v-model.trim="contractTitle"
               @keyup.enter="fnSearch"
             />
           </td>
         </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <colgroup>
-          <col style="width: 15%" />
-          <col style="width: *" />
-        </colgroup>
         <tr>
           <th scope="row">검색단위</th>
-          <td colspan="3">
+          <td>
             <input
               type="text"
+              style="width: 350px"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
             />
           </td>
+          <td></td>
+          <td></td>
         </tr>
       </tbody>
     </table>

@@ -1,12 +1,12 @@
 <template>
   <div class="board">
-    <h2>에너지 관리</h2>
+    <h1>에너지 관리</h1>
     <div class="common-buttons"></div>
     <table>
       <colgroup>
-        <col style="width: *" />
-        <col style="width: *" />
-        <col style="width: *" />
+        <col style="width: 15%" />
+        <col style="width: 35%" />
+        <col style="width: 15%" />
         <col style="width: *" />
       </colgroup>
       <tbody>
@@ -18,7 +18,7 @@
               style="width: 150px; text-align: center"
               v-model.trim="startDate"
             />
-            ~
+            &emsp;~&emsp;
             <input
               type="date"
               style="width: 150px; text-align: center"
@@ -26,12 +26,13 @@
               v-model.trim="endDate"
             />
           </td>
-          <th scope="row">동호</th>
+          <th scope="row">세대정보</th>
           <td style="float: center">
+            &emsp;&emsp;
             <select
               v-model="dongCode"
               @change="onChange($event)"
-              style="width: 100px; height: 25px; text-align: center"
+              style="width: 150px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -42,10 +43,10 @@
                 {{ model.name }}
               </option>
             </select>
-            동&nbsp;&nbsp;
+            동&emsp;&nbsp;&nbsp;
             <select
               v-model="hoCode"
-              style="width: 100px; height: 25px; text-align: center"
+              style="width: 150px; height: 25px; text-align: center"
             >
               <option value="">---전체---</option>
               <option
@@ -56,18 +57,17 @@
                 {{ model.name }}
               </option>
             </select>
-            &nbsp;&nbsp;호
+            호&emsp;
           </td>
           <td></td>
           <td></td>
         </tr>
-
         <tr>
           <th scope="row">에너지유형</th>
           <td>
             <select
               v-model="energyType"
-              style="width: 150px; height: 25px; text-align: center"
+              style="width: 350px; height: 25px; text-align: center"
             >
               <option value="">----전체----</option>
               <option
@@ -83,7 +83,7 @@
           <td>
             <input
               type="text"
-              style="width: 150px; text-align: center"
+              style="width: 350px; text-align: center"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"

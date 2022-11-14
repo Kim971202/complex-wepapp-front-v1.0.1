@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h2>민원관리</h2>
+    <h1>민원관리</h1>
     <!-- <div class="common-buttons">
       <button
         type="button"
@@ -10,9 +10,7 @@
         신규
       </button>
     </div> -->
-    <table>
-      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
-    </table>
+
     <table>
       <colgroup>
         <col style="width: 15%" />
@@ -37,8 +35,19 @@
               v-model.trim="endTime"
             />
           </td>
-          <td></td>
-          <td></td>
+          <th scope="row">진행단계</th>
+          <td>
+            <select
+              v-model="progressStatus"
+              style="width: 350px; height: 25px; text-align: center"
+            >
+              <option value="">----전체----</option>
+              <option value="취소">취소</option>
+              <option value="신청">신청</option>
+              <option value="접수">접수</option>
+              <option value="완료">완료</option>
+            </select>
+          </td>
         </tr>
         <tr>
           <th scope="row">세대정보</th>
@@ -58,7 +67,7 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;동&nbsp;&nbsp;
+            동&emsp;&nbsp;&nbsp;
             <select
               v-model="hoCode"
               style="width: 150px; height: 25px; text-align: center"
@@ -72,35 +81,13 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;호
+            호&emsp;
           </td>
-          <th scope="row">진행단계</th>
-          <td>
-            <select
-              v-model="progressStatus"
-              style="width: 150px; height: 25px; text-align: center"
-            >
-              <option value="">----전체----</option>
-              <option value="취소">취소</option>
-              <option value="신청">신청</option>
-              <option value="접수">접수</option>
-              <option value="완료">완료</option>
-            </select>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <colgroup>
-          <col style="width: 15%" />
-          <col style="width: *" />
-        </colgroup>
-        <tr>
           <th scope="row">검색단위</th>
-          <td colspan="3">
+          <td>
             <input
               type="text"
+              style="width: 350px"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
@@ -352,7 +339,7 @@ export default {
     fnView(idx) {
       this.requestBody.idx = idx;
       this.$router.push({
-        path: "./complaintListDetail",
+        path: "./complaintListUpdate",
         query: this.requestBody,
       });
     },

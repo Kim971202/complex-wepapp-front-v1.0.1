@@ -1,50 +1,16 @@
 <template>
   <meta charset="UTF-8" />
   <div class="board">
-    <h1>공지사항 업로드</h1>
+    <h1>공지사항</h1>
     <table>
       <colgroup>
-        <col style="width: auto" />
-        <col style="width: 20%" />
-        <col style="width: 10%" />
-        <col style="width: auto" />
+        <col style="width: 15%" />
+        <col style="width: 35%" />
+        <col style="width: 15%" />
+        <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row">공지사항 제목</th>
-          <td>
-            <input
-              type="text"
-              placeholder="공지사항 제목을 입력하세요."
-              ref="notiTitleInput"
-              v-model.trim="notiTitle"
-            />
-          </td>
-          <th scope="row">공지사항 내용</th>
-          <td>
-            <textarea
-              type="text"
-              placeholder="공지사항 내용을 입력하세요."
-              ref="notiContentInput"
-              v-model.trim="notiContent"
-            />
-          </td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <th scope="row">공지대상</th>
-          <td>
-            <select
-              v-model="notiType"
-              ref="notiTypeInput"
-              style="width: 150px; height: 25px; text-align: center"
-            >
-              <option value="">----선택----</option>
-              <option value="Y">전체</option>
-              <option value="N">개별</option>
-            </select>
-          </td>
           <th scope="row">공지기간</th>
           <td style="float: center">
             <input
@@ -53,7 +19,7 @@
               ref="startDateInput"
               v-model.trim="startDate"
             />
-            ~
+            &emsp;~&emsp;
             <input
               type="date"
               style="width: 150px; text-align: center"
@@ -61,20 +27,55 @@
               v-model.trim="endDate"
             />
           </td>
-          <td></td>
-          <td></td>
+          <th scope="row">공지대상</th>
+          <td>
+            <select
+              v-model="notiType"
+              ref="notiTypeInput"
+              style="width: 350px; height: 25px; text-align: center"
+            >
+              <option value="">----선택----</option>
+              <option value="Y">전체</option>
+              <option value="N">개별</option>
+            </select>
+          </td>
         </tr>
         <tr>
-          <input
-            type="file"
-            @change="onFileChange"
-            charset="UTF-8"
-            id="images"
-          />
+          <th scope="row">제&emsp;목</th>
+          <td colspan="3">
+            <input
+              type="text"
+              placeholder="공지사항 제목을 입력하세요."
+              ref="notiTitleInput"
+              v-model.trim="notiTitle"
+            />
+          </td>
         </tr>
         <tr>
-          <th scope="row">동호</th>
-          <td style="float: center">
+          <th scope="row">내&emsp;용</th>
+          <td colspan="3">
+            <textarea
+              type="text"
+              placeholder="내용을 입력하세요."
+              ref="notiContentInput"
+              v-model.trim="notiContent"
+            ></textarea>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">첨부파일</th>
+          <td colspan="3">
+            <input
+              type="file"
+              @change="onFileChange"
+              charset="UTF-8"
+              id="images"
+            />
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">세대정보</th>
+          <td style="float: center" colspan="3">
             <select
               v-model="dongCode"
               @change="onChange($event)"
@@ -94,7 +95,7 @@
                 {{ model.name }}
               </option>
             </select>
-            동&nbsp;&nbsp;
+            동&emsp;&nbsp;&nbsp;
             <select
               v-model="hoCode"
               style="width: 100px; height: 25px; text-align: center"
@@ -109,29 +110,29 @@
                 {{ model.name }}
               </option>
             </select>
-            호&nbsp;&nbsp;
+            호&emsp;&nbsp;&nbsp;
           </td>
         </tr>
         <tr>
-          <div>
-            <div class="text-uppercase text-bold">
-              선택한 세대의 호: {{ hoCode }}
-            </div>
-            <select class="form-control" v-model="color">
-              <option :key="i" :value="d.v" v-for="(d, i) in ho_items">
-                *개별공지 알림할 세대 선택 {{ ho_items.length }}
-              </option>
-            </select>
-            <table v-if="tableShow">
-              <tr :key="i" v-for="(d, i) in ho_items">
-                <td>
-                  <input type="checkbox" :value="d.code" v-model="hoCode" />
-                </td>
-                <td>{{ d.dongCode }} - {{ d.code }}</td>
-                <td></td>
-              </tr>
-            </table>
-          </div>
+          <th>공지 세대 로그</th>
+          <td>{{ dongCode }} - {{ hoCode }}</td>
+        </tr>
+        <tr>
+          <th>개별 공지 알림 세대<br />{{ ho_items.length }}</th>
+          <select class="form-control" v-model="color">
+            <option :key="i" :value="d.v" v-for="(d, i) in ho_items">
+              *개별공지 알림할 세대 선택 {{ ho_items.length }}
+            </option>
+          </select>
+          <table v-if="tableShow">
+            <tr :key="i" v-for="(d, i) in ho_items">
+              <td>
+                <input type="checkbox" :value="d.code" v-model="hoCode" />
+              </td>
+              <td>{{ d.dongCode }} - {{ d.code }}</td>
+              <td></td>
+            </tr>
+          </table>
         </tr>
       </tbody>
     </table>

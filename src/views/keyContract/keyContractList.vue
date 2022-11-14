@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h2>주요연락처</h2>
+    <h1>주요연락처</h1>
     <div class="common-buttons">
       <button
         type="button"
@@ -130,10 +130,7 @@
         </td>
         <td>
           <div class="table-button-container">
-            <button
-              class="w3-button w3-round w3-red"
-              v-on:click="fnDelete(`${row.idx}`)"
-            >
+            <button class="w3-button w3-round w3-red" v-on:click="fnDelete">
               <i class="fa fa-delete"></i> 삭제
             </button>
           </div>
@@ -220,6 +217,7 @@ export default {
       facilityName: this.$route.query.facilityName,
       phoneNum: this.$route.query.phoneNum,
       insertDTime: this.$route.query.insertDTime,
+      idx: this.$route.query.idx,
 
       paginavigation: function () {
         //페이징 처리 for문 커스텀

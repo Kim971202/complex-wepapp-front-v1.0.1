@@ -7,7 +7,7 @@
 -->
 <template>
   <div class="board">
-    <h2>공지사항</h2>
+    <h1>공지사항</h1>
     <div class="common-buttons">
       <button
         type="button"
@@ -34,7 +34,7 @@
               v-bind:disabled="moveOutDtime == ''"
               v-model.trim="startDate"
             />
-            ~
+            &emsp;~&emsp;
             <input
               type="date"
               style="width: 150px; text-align: center"
@@ -46,7 +46,7 @@
           <td>
             <select
               v-model="notiType"
-              style="width: 300px; height: 25px; text-align: center"
+              style="width: 350px; height: 25px; text-align: center"
             >
               <option value="">----전체----</option>
               <option value="전체">전체공지</option>
@@ -59,7 +59,7 @@
           <td>
             <select
               v-model="sendResult"
-              style="width: 320px; height: 25px; text-align: center"
+              style="width: 350px; height: 25px; text-align: center"
             >
               <option value="">----전체----</option>
               <option value="Y">Y</option>
@@ -70,7 +70,7 @@
           <td>
             <input
               type="text"
-              style="width: 300px; text-align: center"
+              style="width: 350px; text-align: center"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"

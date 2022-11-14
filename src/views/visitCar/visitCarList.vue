@@ -1,6 +1,6 @@
 <template>
   <div class="board">
-    <h2>방문차량</h2>
+    <h1>방문차량</h1>
     <div class="common-buttons">
       <button
         type="button"
@@ -10,9 +10,7 @@
         신규
       </button>
     </div>
-    <table>
-      <h5 style="color: #2196f3; text-align: left">검색조건 설정</h5>
-    </table>
+
     <table>
       <colgroup>
         <col style="width: 15%" />
@@ -38,8 +36,16 @@
               v-model.trim="endDate"
             />
           </td>
-          <td></td>
-          <td></td>
+          <th scope="row">차량번호</th>
+          <td>
+            <input
+              type="text"
+              style="width: 350px"
+              ref="carNumberInput"
+              v-model.trim="carNumber"
+              @keyup.enter="fnSearch"
+            />
+          </td>
         </tr>
         <tr>
           <th scope="row">세대정보</th>
@@ -59,7 +65,7 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;동&nbsp;&nbsp;
+            동&emsp;&nbsp;&nbsp;
             <select
               v-model="hoCode"
               style="width: 150px; height: 25px; text-align: center"
@@ -73,36 +79,33 @@
                 {{ model.name }}
               </option>
             </select>
-            &emsp;호
+            호&emsp;
           </td>
-          <th scope="row">차량번호</th>
+          <th scope="row">입차여부</th>
+          <td>
+            <select
+              v-model="inoutFlag"
+              style="width: 350px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option value="Y">Y</option>
+              <option value="N">N</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">검색단위</th>
           <td>
             <input
               type="text"
-              ref="carNumberInput"
-              v-model.trim="carNumber"
-              @keyup.enter="fnSearch"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <colgroup>
-          <col style="width: 15%" />
-          <col style="width: *" />
-        </colgroup>
-        <tr>
-          <th scope="row">검색단위</th>
-          <td colspan="3">
-            <input
-              type="text"
+              style="width: 350px"
               ref="sizeInput"
               v-model="size"
               @keyup.enter="fnSearch"
             />
           </td>
+          <td></td>
+          <td></td>
         </tr>
       </tbody>
     </table>
