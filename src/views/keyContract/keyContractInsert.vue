@@ -1,6 +1,20 @@
+<!-- 
+    프로그램 명 : 주요연락처 등록
+    최초 작성자: 최문준
+    최초 작성일자: 2022년10월21일
+
+    마지막 수정자: 최문준
+    마지막 수정일자: 2022년11월14일
+
+                  수정 내용
+  | NO |              contents                |  Data
+  | 1  | 구분 콤보 박스 변경                   | 2022-11-14
+-->
+
 <template>
   <div class="board">
     <h1>주요연락처 등록</h1>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 18.5%" />

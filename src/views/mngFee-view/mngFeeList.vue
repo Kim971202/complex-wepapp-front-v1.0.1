@@ -1,3 +1,16 @@
+<!-- 
+    프로그램명: 관리비 리스트
+    최초 작성자: 김동현
+    최초 작성일자: 2022년10월21일
+
+    마지막 수정자: 최문준
+    마지막 수정일자: 2022년11월14일
+
+                  수정 내용
+  NO |              contents                |  Data
+   1 | 관리비 검색 년월 추가                  | 2022-11-14
+-->
+
 <template>
   <div class="board">
     <h1>관리비</h1>
@@ -70,6 +83,39 @@
           </td>
         </tr>
         <tr>
+          <th scope="row">부과년월</th>
+          <td style="float: center">
+            &emsp;&emsp;
+            <select
+              v-model="mngYear"
+              @change="onChange($event)"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in dong_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            년&emsp;&nbsp;&nbsp;
+            <select
+              v-model="mngMonth"
+              style="width: 150px; height: 25px; text-align: center"
+            >
+              <option value="">---전체---</option>
+              <option
+                v-for="model in ho_items"
+                :key="model.code"
+                :value="model.code"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            월&emsp;
+          </td>
           <th scope="row">검색단위</th>
           <td>
             <input
@@ -111,7 +157,7 @@
         <th>동</th>
         <th>호</th>
         <th>평형</th>
-        <th>부과월</th>
+        <th>부과년월</th>
         <th>합계</th>
         <th>상세보기</th>
       </tr>
@@ -202,8 +248,8 @@ export default {
   data() {
     //변수생성
     return {
-      selected: [],
-      selectAll: false,
+      // selected: [],
+      // selectAll: false,
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: "", //게시판 숫자처리
@@ -220,8 +266,10 @@ export default {
       dongCode: this.$route.query.dongCode,
       hoCode: this.$route.query.hoCode,
       hAreaType: this.$route.query.hAreaType,
-      dong_itmes: [],
+      dong_items: [],
       ho_items: [],
+      mngYear_items: [],
+      mngMonth_items: [],
       items: [],
       paginavigation: function () {
         //페이징 처리 for문 커스텀

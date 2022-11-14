@@ -162,7 +162,7 @@ export default {
             if (res.data.resultCode == "00") {
               alert("수정되었습니다.");
               //alert(JSON.stringify(res.data.resultMsg));
-              this.fnView(res.data.idx);
+              this.fnList(res.data.idx);
             } else {
               alert("수정되지 않았습니다.");
             }

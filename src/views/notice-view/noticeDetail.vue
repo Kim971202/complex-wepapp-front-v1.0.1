@@ -13,6 +13,7 @@
 <template>
   <div class="board">
     <h1>공지사항 상세보기</h1>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 30%" />

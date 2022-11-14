@@ -1,6 +1,7 @@
 <template>
   <div class="board">
     <h1>주차 위치</h1>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 15%" />

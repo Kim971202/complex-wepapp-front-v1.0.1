@@ -1,6 +1,7 @@
 <template>
   <div class="board">
     <h2>동호정보</h2>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 20%" />

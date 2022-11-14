@@ -1,6 +1,7 @@
 <template>
   <div class="board">
     <h1>방문차량 상세정보</h1>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 18.5%" />

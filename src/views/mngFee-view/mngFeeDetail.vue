@@ -1,6 +1,7 @@
 <template>
   <div class="board">
     <h2>관리비 상세 내역</h2>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 30%" />

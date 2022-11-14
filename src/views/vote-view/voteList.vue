@@ -1,7 +1,15 @@
 <template>
   <div class="board">
     <h1>주민투표</h1>
-    <div class="common-buttons"></div>
+    <div class="common-buttons">
+      <button
+        type="button"
+        class="w3-button w3-round w3-teal"
+        v-on:click="fnWrite"
+      >
+        신규
+      </button>
+    </div>
     <table>
       <colgroup>
         <col style="width: 15%" />
@@ -57,7 +65,6 @@
     <div class="right">
       <button class="button blue" @click="fnSearch">검색</button>
       <button class="button" @click="fnList">취소</button>
-      <button class="button" @click="fnWrite">신규</button>
     </div>
   </div>
   <div class="text-uppercase text-bold">id selected: {{ selected }}</div>

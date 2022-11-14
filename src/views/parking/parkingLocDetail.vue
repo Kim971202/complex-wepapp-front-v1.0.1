@@ -1,6 +1,7 @@
 <template>
   <div class="board">
-    <h2>세대 주차위치 상세 정보</h2>
+    <h1>세대 주차위치 상세 정보</h1>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 18.5%" />

@@ -1,6 +1,20 @@
+<!-- 
+    프로그램 명 : 주요연락처 수정
+    최초 작성자: 최문준
+    최초 작성일자: 2022년10월21일
+
+    최종 수정자: 최문준
+    최종 수정일자: 2022년11월14일
+
+                  수정 내용
+  | NO |              contents                |  Date
+  |    |                                      | 
+-->
+
 <template>
   <div class="board">
     <h1>주요연락처</h1>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 18.5%" />

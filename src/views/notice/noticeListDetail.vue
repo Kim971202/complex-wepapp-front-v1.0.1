@@ -1,6 +1,7 @@
 <template>
   <div class="board">
-    <h2>공지사항 내용</h2>
+    <h1>공지사항 내용</h1>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 18.5%" />

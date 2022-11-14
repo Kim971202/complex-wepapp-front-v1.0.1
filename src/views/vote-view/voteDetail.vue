@@ -1,6 +1,7 @@
 <template>
   <div class="board">
-    <h2>주민투표 상세보기</h2>
+    <h1>주민투표 상세보기</h1>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 18.5%" />

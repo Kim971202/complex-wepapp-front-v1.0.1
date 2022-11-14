@@ -2,6 +2,7 @@
   <meta charset="UTF-8" />
   <div class="board">
     <h1>투표 업로드</h1>
+    <div class="common-buttons"></div>
     <table>
       <colgroup>
         <col style="width: 20%" />
